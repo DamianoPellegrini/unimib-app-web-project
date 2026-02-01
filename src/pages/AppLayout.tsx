@@ -33,37 +33,37 @@ function AppLayout() {
 					</button>
 					<menu data-open={menuOpen || undefined}>
 						<li>
-							<NavLink to="/" end onClick={() => setMenuOpen(false)}>
+							<NavLink to="/" end onClick={() => setMenuOpen(false)} viewTransition>
 								Introduction
 							</NavLink>
 						</li>
 						<li>
-							<NavLink to="/elixirs" onClick={() => setMenuOpen(false)}>
+							<NavLink to="/elixirs" onClick={() => setMenuOpen(false)} viewTransition>
 								Elixirs
 							</NavLink>
 						</li>
 						<li>
-							<NavLink to="/houses" onClick={() => setMenuOpen(false)}>
+							<NavLink to="/houses" onClick={() => setMenuOpen(false)} viewTransition>
 								Houses
 							</NavLink>
 						</li>
 						<li>
-							<NavLink to="/ingredients" onClick={() => setMenuOpen(false)}>
+							<NavLink to="/ingredients" onClick={() => setMenuOpen(false)} viewTransition>
 								Ingredients
 							</NavLink>
 						</li>
 						<li>
-							<NavLink to="/magical-creatures" onClick={() => setMenuOpen(false)}>
+							<NavLink to="/magical-creatures" onClick={() => setMenuOpen(false)} viewTransition>
 								Magical Creatures
 							</NavLink>
 						</li>
 						<li>
-							<NavLink to="/spells" onClick={() => setMenuOpen(false)}>
+							<NavLink to="/spells" onClick={() => setMenuOpen(false)} viewTransition>
 								Spells
 							</NavLink>
 						</li>
 						<li>
-							<NavLink to="/wizards" onClick={() => setMenuOpen(false)}>
+							<NavLink to="/wizards" onClick={() => setMenuOpen(false)} viewTransition>
 								Wizards
 							</NavLink>
 						</li>
