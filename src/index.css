@@ -29,6 +29,8 @@
 		var(--color-wood-800) 50%,
 		var(--color-wood-950) 100%
 	);
+	background-size: 100% 100vh;
+	background-attachment: fixed;
 
 	/* FONT FACE */
 	font-family: "Georgia", Cambria, "Times New Roman", serif;
