@@ -21,11 +21,11 @@ function ElixirCard({ elixir }: ElixirCardProps) {
 	// 	return null;
 	// }
 	return (
-		<Link to={`/elixirs/${elixir.id}`} data-card className="ElixirCard">
+		<Link to={`/elixirs/${elixir.id}`} data-card className="ElixirCard" viewTransition>
 			<header>
 				<Potion className="big" style={{ color: COLORS[(elixir.id.charCodeAt(0) * 10) % COLORS.length] }} />
 				<hgroup>
-					<h3>{elixir.name}</h3>
+					<h3 style={{ viewTransitionName: `elixir-${elixir.id}` }}>{elixir.name}</h3>
 					<small>{elixir.manufacturer ?? "Unknown manufacturer"}</small>
 				</hgroup>
 			</header>

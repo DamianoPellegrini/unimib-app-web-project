@@ -19,7 +19,7 @@ import WizardDetail from "./pages/Wizards/Detail";
 
 createRoot(document.getElementsByTagName("body")[0]).render(
 	<StrictMode>
-		<BrowserRouter>
+		<BrowserRouter basename={import.meta.env.BASE_URL}>
 			<Routes>
 				<Route element={<AppLayout />}>
 					<Route index element={<App />} />

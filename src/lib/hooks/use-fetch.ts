@@ -1,6 +1,8 @@
 import React from "react";
 import { sleep } from "../utils";
 
+const DEV_DELAY_MS = import.meta.env.DEV ? 1000 : 0;
+
 type HTTPError = {
 	status: number;
 	statusText: string;
@@ -11,53 +13,99 @@ type RequestInitWithoutSignal = Omit<RequestInit, "signal">;
 
 type UseFetchOptions = {
 	/**
-	 * Numero di retries
+	 * Numero di tentativi aggiuntivi dopo il primo fallimento.
 	 * @default 0
 	 */
 	retries?: number;
 	/**
-	 * Delay da aspettare per ogni retry
-	 * @default 500ms
+	 * Millisecondi di attesa tra un tentativo e il successivo.
+	 * @default 500
 	 */
 	retryDelayMs?: number;
 	/**
-	 * Determina se riprovare o no dato un certo errore
+	 * Callback che decide se ritentare dato un errore. Viene salvata in un ref
+	 * per evitare che una nuova reference causi un refetch.
 	 * @default () => true
 	 */
 	retryOn?: (error: unknown) => boolean;
 	/**
-	 * Se fare un fetch automatico al mount (dove cambiano i parametri)
+	 * Se `true`, la richiesta parte automaticamente al mount.
 	 * @default true
 	 */
 	fetchOnMount?: boolean;
-	/** Determina quando la richiesta cambia, se io passo dei parametri al fetchInit */
+	/**
+	 * Lista di valori primitivi che, se modificati, causano un refetch.
+	 * Vengono espansi in un dependency array, cosi' il
+	 * confronto avviene per valore e non per riferimento rispetto all'oggetto options.
+	 *
+	 * Utile quando proprietà di `RequestInit` (es. `headers`) dipendono da
+	 * stato che cambia nel tempo: siccome `fetchInit` viene catturato nella
+	 * closure, un cambio di `requestKey` ricrea `performFetch` e cattura
+	 * i valori aggiornati.
+	 *
+	 * @example
+	 * ```tsx
+	 * const { token } = getSomeState();
+	 * const { data } = useFetch(`${API}/protected`, {
+	 *   headers: { Authorization: `Bearer ${token}` },
+	 *   requestKey: [token],
+	 * });
+	 * ```
+	 *
+	 * @example
+	 * ```tsx
+	 * const { data } = useFetch(`${API}/Elixirs`, {
+	 *   headers: { "Cache-Control": "max-age=31536000, immutable" },
+	 * });
+	 * ```
+	 */
 	requestKey?: readonly unknown[];
 } & RequestInitWithoutSignal;
 
 /**
- * Hook to fetch data from an {@link URL} using the {@link fetch} API.
- * @param input `string` or {@link URL}
- * @param options
- * @returns Data, errors, loading state, refetch functions
+ * Hook per eseguire richieste HTTP con gestione di loading, errori e retry.
+ *
+ * Le proprietà di {@link RequestInit} (es. `headers`, `method`) vengono
+ * passate direttamente nella funzione {@link fetch}.
+ * Se i loro valori dipendono da stato dinamico, usare `requestKey` per
+ * segnalare a React quando rifare la richiesta.
+ *
+ * @example
+ * ```tsx
+ * // Richiesta semplice
+ * const { data, isLoading, error } = useFetch<User[]>("/api/users");
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Con retry e headers dinamici
+ * const { data } = useFetch<Profile>(`/api/profile`, {
+ *   headers: { Authorization: `Bearer ${token}` },
+ *   retries: 2,
+ *   retryDelayMs: 1000,
+ *   requestKey: [token],
+ * });
+ * ```
+ *
+ * @param input URL della richiesta, `string` o {@link URL}
+ * @param options Opzioni del hook + proprietà di {@link RequestInit} (senza `signal`)
+ * @returns `{ data, error, isLoading, refetchAsync }`
  */
 export function useFetch<T>(input: string | URL, options?: UseFetchOptions) {
-	const [data, setData] = React.useState<T | null>(null);
-	const [error, setError] = React.useState<HTTPError | null>(null);
-	const [isLoading, setLoading] = React.useState(false);
-
-	const normalizedInput = React.useMemo(() => {
-		if (input instanceof URL) return input.href;
-		return input;
-	}, [input]);
-
 	const {
+		fetchOnMount = true,
+		requestKey = [],
 		retries = 0,
 		retryDelayMs = 500,
 		retryOn,
-		fetchOnMount = true,
-		requestKey = [],
-		...fetchOptions
+		...fetchInit
 	} = options ?? {};
+
+	const [data, setData] = React.useState<T | null>(null);
+	const [error, setError] = React.useState<HTTPError | null>(null);
+	const [isLoading, setLoading] = React.useState(fetchOnMount);
+
+	const url = typeof input === "string" ? input : input.href;
 
 	const abortCtrlRef = React.useRef<AbortController | null>(null);
 	const retryOnRef = React.useRef(retryOn);
@@ -71,59 +119,63 @@ export function useFetch<T>(input: string | URL, options?: UseFetchOptions) {
 
 		const controller = new AbortController();
 		abortCtrlRef.current = controller;
+		const { signal } = controller;
 
 		setLoading(true);
 		setError(null);
 
-		let attempts = 0;
-		while (attempts <= retries) {
-			try {
-				const response = await fetch(normalizedInput, {
-					...fetchOptions,
-					signal: controller.signal,
-				});
+		if (DEV_DELAY_MS > 0) {
+			await sleep(DEV_DELAY_MS);
+			if (signal.aborted) return;
+		}
 
-				const responseData = (await response.json()) as T | Record<string, unknown>;
+		for (let attempt = 0; attempt <= retries; attempt++) {
+			if (attempt > 0) {
+				await sleep(retryDelayMs);
+				if (signal.aborted) return;
+			}
+
+			try {
+				const response = await fetch(url, { ...fetchInit, signal });
 
 				if (!response.ok) {
+					let body: Record<string, unknown> = {};
+					try {
+						body = (await response.json()) as Record<string, unknown>;
+					} catch {
+						/* non-JSON error body — ignore */
+					}
+
 					const httpError: HTTPError = {
 						status: response.status,
 						statusText: response.statusText,
-						...(responseData as Record<string, unknown>),
+						...body,
 					};
 
-					if (attempts < retries && retryOnRef.current?.(httpError)) {
-						attempts++;
-						await sleep(retryDelayMs);
-						continue;
-					}
+					if (attempt < retries && retryOnRef.current?.(httpError) !== false) continue;
 
+					setData(null);
 					setError(httpError);
 					setLoading(false);
 					return;
 				}
 
-				setData(responseData as T);
+				setData((await response.json()) as T);
 				setLoading(false);
 				return;
 			} catch (err) {
-				if (err instanceof DOMException && err.name === "AbortError") {
-					// Ignoro errori Abort dato che sono causati dai re-render quando cambiano i paramtri della chiamata
-					setLoading(false);
-					return;
-				}
+				if (signal.aborted) return;
 
-				if (attempts < retries && retryOnRef.current?.(err)) {
-					attempts++;
-					await sleep(retryDelayMs);
-					continue;
-				}
+				if (attempt < retries && retryOnRef.current?.(err) !== false) continue;
 
-				throw err;
+				setData(null);
+				setError({ status: 0, statusText: err instanceof Error ? err.message : "Network error" });
+				setLoading(false);
+				return;
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [normalizedInput, retries, retryDelayMs, ...requestKey]);
+	}, [url, retries, retryDelayMs, ...requestKey]);
 
 	React.useEffect(() => {
 		if (!fetchOnMount) return;

@@ -30,39 +30,23 @@ function AppLayout() {
 					</menu>
 				</nav>
 			</header>
-			<div className="wood-swatch">
-				<span></span>
-				<span></span>
-				<span></span>
-				<span></span>
-				<span></span>
-				<span></span>
-				<span></span>
-				<span></span>
-				<span></span>
-				<span></span>
-				<span></span>
-			</div>
-			<div className="paper-swatch">
-				<span></span>
-				<span></span>
-				<span></span>
-				<span></span>
-				<span></span>
-				<span></span>
-				<span></span>
-				<span></span>
-				<span></span>
-				<span></span>
-				<span></span>
-			</div>
 
 			<main>
 				<Outlet />
 			</main>
 
 			<footer>
-				<small>© Hogwarts Compendium — interface inspired by old spellbooks</small>
+				<small>&copy; Hogwarts Compendium &mdash; interface inspired by old spellbooks</small>
+				<small>
+					Data provided by{" "}
+					<a href="https://wizard-world-api.herokuapp.com" target="_blank" rel="noopener noreferrer">
+						Wizard World API
+					</a>{" "}
+					&mdash;{" "}
+					<a href="https://github.com/MossPiglets/WizardWorldAPI" target="_blank" rel="noopener noreferrer">
+						GitHub
+					</a>
+				</small>
 			</footer>
 		</>
 	);

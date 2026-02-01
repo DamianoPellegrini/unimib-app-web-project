@@ -10,9 +10,7 @@ type UseElixirsOptions = {
 
 export function useElixirs(filters?: UseElixirsOptions) {
 	const { data, ...rest } = useFetch<Elixir[]>(`${API_BASE_URL}/Elixirs`, {
-		headers: {
-			"Cache-Control": "max-age=31536000, immutable",
-		},
+		headers: { "Cache-Control": "max-age=31536000, immutable" },
 	});
 	const { textSearch, difficulty } = filters ?? {};
 
