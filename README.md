@@ -1,110 +1,68 @@
 # The Hogwarts Compendium
 
-A wizarding world reference built with React 19, TypeScript, and the [Wizard World API](https://wizard-world-api.herokuapp.com). Browse spells, houses, elixirs, ingredients, magical creatures, and wizards - styled with semantic HTML, modern CSS, and View Transitions.
+A Harry Potter themed single-page application that lets you browse spells, houses, magical creatures, elixirs, ingredients, and wizards. Data is provided by the [Wizard World API](https://wizard-world-api.herokuapp.com).
 
-## Live demo
+**Live demo:** <https://damianopellegrini.github.io/unimib-app-web-project/>
 
-[**damianopellegrini.github.io/unimib-app-web-project**](https://damianopellegrini.github.io/unimib-app-web-project/)
+## Table of contents
+
+- [Tech stack](#tech-stack)
+- [Getting started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Development](#development)
+  - [Building for production](#building-for-production)
+  - [Linting](#linting)
+- [Documentation](#documentation)
 
 ## Tech stack
 
-| Layer | Technology |
-|-------|------------|
-| Framework | [React 19](https://react.dev/) |
-| Language | [TypeScript 5.9](https://www.typescriptlang.org/) |
-| Build tool | [Vite 7](https://vite.dev/) with [SWC](https://swc.rs/) |
-| Routing | [React Router 7](https://reactrouter.com/) |
-| Runtime | [Bun](https://bun.sh/) |
-| Linting | [ESLint 9](https://eslint.org/) with [typescript-eslint](https://typescript-eslint.io/) |
-| Deployment | [GitHub Pages](https://pages.github.com/) via GitHub Actions |
+- [React 19](https://react.dev/) with [TypeScript](https://www.typescriptlang.org/) (strict mode)
+- [React Router 7](https://reactrouter.com/) (data router with view transitions)
+- [Vite 7](https://vite.dev/) with [SWC](https://swc.rs/) for fast compilation
+- [Bun](https://bun.sh/) as package manager
+- Modern CSS (nesting, `oklch()`, `light-dark()`, view transitions)
+- GitHub Pages for deployment
 
-## Features
-
-- **Six browsable categories** - Elixirs, Houses, Spells, Wizards, Ingredients, and Magical Creatures, each with index and detail views
-- **Client-side search** - filter any collection in real time
-- **View Transitions API** - smooth morph animations when navigating between card grids and detail pages
-- **Semantic HTML** - `<article>`, `<section>`, `<search>`, `<hgroup>`, `<dl>`, `<time>`, `<data>` used throughout per MDN guidelines
-- **Modern CSS** - custom properties for spacing and theming, CSS nesting, `oklch()` color system, `color-mix()`, no preprocessor
-- **Custom `useFetch` hook** - generic data fetching with automatic retries, abort handling, and request deduplication via `requestKey`
-- **Skeleton loading** - reusable `CardSkeleton` and `DetailSkeleton` components with pulse animations
-- **Responsive grid layout** - auto-filling card grids that adapt to viewport width
-- **Custom SVG icons** - hand-crafted icons for each category (Potion, Shield, Wand, Hat, Leaf, Paw)
-
-## Project structure
-
-```
-src/
-  main.tsx                          # Entry point and route definitions
-  index.css                         # Global styles, spacing variables, component CSS
-  colors.css                        # Color palette (oklch wood & paper tokens)
-  lib/
-    constants.ts                    # API base URL
-    colors.ts                       # House and spell color maps
-    utils.ts                        # Shared utilities
-    hooks/
-      use-fetch.ts                  # Generic fetch hook with retries and abort
-      use-elixirs.ts                # Elixirs data hook
-      use-houses.ts                 # Houses data hook
-      use-spells.ts                 # Spells data hook
-      use-wizards.ts                # Wizards data hook
-      use-ingredients.ts            # Ingredients data hook
-      use-magical-creatures.ts      # Magical Creatures data hook
-    models/                         # TypeScript interfaces for API entities
-    components/
-      ElixirCard.tsx                # Card components for each entity
-      HouseCard.tsx
-      SpellCard.tsx
-      WizardCard.tsx
-      IngredientCard.tsx
-      MagicalCreatureCard.tsx
-      CardSkeleton.tsx              # Reusable card skeleton loader
-      DetailSkeleton.tsx            # Reusable detail page skeleton loader
-      icons/                        # SVG icon components
-  pages/
-    App.tsx                         # Home page
-    AppLayout.tsx                   # Shell layout (nav + main + footer)
-    Elixirs/index.tsx & Detail.tsx  # Index and detail for each category
-    Houses/
-    Spells/
-    Wizards/
-    Ingredients/
-    MagicalCreatures/
-```
 
 ## Getting started
 
 ### Prerequisites
 
-- [Bun](https://bun.sh/) >= 1.0 (or Node.js >= 20 with npm)
+- [Bun](https://bun.sh/) v1.0 or later
 
-### Install and run
+### Development
 
-```bash
-# Clone the repository
-git clone git@github.com:DamianoPellegrini/unimib-app-web-project.git
-cd unimib-app-web-project
-
+```sh
 # Install dependencies
 bun install
 
-# Start the dev server
+# Start the dev server with hot module replacement
 bun run dev
 ```
 
-The app will be available at `http://localhost:5173`.
+The app will be available at `http://localhost:5173/unimib-app-web-project/`.
 
-### Other scripts
+### Building for production
 
-```bash
-bun run build     # Type-check and build for production
-bun run preview   # Preview the production build locally
-bun run lint      # Run ESLint
+```sh
+# Type-check and build
+bun run build
+
+# Preview the production build locally
+bun run preview
 ```
 
-## Data source
+The output goes to the `dist/` directory.
 
-All data is fetched from the [Wizard World API](https://wizard-world-api.herokuapp.com) ([GitHub](https://github.com/MossPiglets/WizardWorldAPI)) - an open, community-maintained REST API for Harry Potter universe data.
+### Linting
 
-## License
+```sh
+bun run lint
+```
 
-[MIT](LICENSE)
+Uses ESLint with flat config, including React Hooks and React Refresh plugins.
+
+## Documentation
+
+- [Setup, build, and design decisions](docs/setup.md)
+- [Architecture and project structure](docs/architecture.md)

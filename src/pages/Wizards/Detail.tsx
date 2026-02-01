@@ -1,15 +1,19 @@
-import { Link, useParams } from "react-router";
+import { Link, useLocation, useParams } from "react-router";
 import DetailNav from "../../lib/components/DetailNav";
 import DetailSkeleton from "../../lib/components/DetailSkeleton";
 import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import { Hat } from "../../lib/components/icons";
-import { useWizard } from "../../lib/hooks/use-wizards";
+import { useWizard, useWizards } from "../../lib/hooks/use-wizards";
+import { isDetailNavState } from "../../lib/models/detail-nav";
 import type { DetailNavState } from "../../lib/models/detail-nav";
 
 /** Detail page for a single wizard, showing their known elixirs. */
 function WizardDetail() {
 	const { id } = useParams();
+	const { state } = useLocation();
+	const hasNavState = isDetailNavState(state);
 	const { wizard, isLoading, error, refetchAsync } = useWizard(id!);
+	const { navState } = useWizards({ skip: hasNavState });
 
 	if (isLoading) return <DetailSkeleton rows={2} />;
 	if (error)
@@ -47,7 +51,7 @@ function WizardDetail() {
 				</section>
 			)}
 
-			<DetailNav />
+			<DetailNav fallback={navState} />
 		</article>
 	);
 }

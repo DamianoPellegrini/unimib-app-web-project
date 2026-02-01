@@ -8,6 +8,8 @@ import { useFetch } from "./use-fetch";
 type UseMagicalCreaturesOptions = {
 	textSearch?: string;
 	classification?: CreatureClassification;
+	/** When true, skips the fetch entirely (e.g. when nav state is already available). */
+	skip?: boolean;
 };
 
 /**
@@ -15,10 +17,11 @@ type UseMagicalCreaturesOptions = {
  * Also builds a {@link DetailNavState} from the unfiltered list for prev/next navigation.
  */
 export function useMagicalCreatures(filters?: UseMagicalCreaturesOptions) {
+	const { textSearch, classification, skip } = filters ?? {};
 	const { data, ...rest } = useFetch<MagicalCreature[]>(`${API_BASE_URL}/MagicalCreature`, {
 		headers: { "Cache-Control": "max-age=31536000, immutable" },
+		fetchOnMount: !skip,
 	});
-	const { textSearch, classification } = filters ?? {};
 
 	// Client-side filtering to avoid debouncing and potential API rate limits
 	const filteredCreatures = React.useMemo(

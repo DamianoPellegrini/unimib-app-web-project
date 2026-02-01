@@ -1,14 +1,18 @@
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import DetailNav from "../../lib/components/DetailNav";
 import DetailSkeleton from "../../lib/components/DetailSkeleton";
 import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import { Monster, Paw } from "../../lib/components/icons";
-import { useMagicalCreature } from "../../lib/hooks/use-magical-creatures";
+import { useMagicalCreature, useMagicalCreatures } from "../../lib/hooks/use-magical-creatures";
+import { isDetailNavState } from "../../lib/models/detail-nav";
 
 /** Detail page for a single magical creature, showing classification, status, and description. */
 function MagicalCreatureDetail() {
 	const { id } = useParams();
+	const { state } = useLocation();
+	const hasNavState = isDetailNavState(state);
 	const { creature, isLoading, error, refetchAsync } = useMagicalCreature(id!);
+	const { navState } = useMagicalCreatures({ skip: hasNavState });
 
 	if (isLoading) return <DetailSkeleton rows={4} />;
 	if (error)
@@ -55,7 +59,7 @@ function MagicalCreatureDetail() {
 				</section>
 			)}
 
-			<DetailNav />
+			<DetailNav fallback={navState} />
 		</article>
 	);
 }

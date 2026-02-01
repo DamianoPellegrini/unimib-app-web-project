@@ -1,14 +1,18 @@
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import DetailNav from "../../lib/components/DetailNav";
 import DetailSkeleton from "../../lib/components/DetailSkeleton";
 import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import { Leaf } from "../../lib/components/icons";
-import { useIngredient } from "../../lib/hooks/use-ingredients";
+import { useIngredient, useIngredients } from "../../lib/hooks/use-ingredients";
+import { isDetailNavState } from "../../lib/models/detail-nav";
 
 /** Detail page for a single ingredient. */
 function IngredientDetail() {
 	const { id } = useParams();
+	const { state } = useLocation();
+	const hasNavState = isDetailNavState(state);
 	const { ingredient, isLoading, error, refetchAsync } = useIngredient(id!);
+	const { navState } = useIngredients({ skip: hasNavState });
 
 	if (isLoading) return <DetailSkeleton rows={1} />;
 	if (error)
@@ -28,7 +32,7 @@ function IngredientDetail() {
 				</hgroup>
 			</header>
 
-			<DetailNav />
+			<DetailNav fallback={navState} />
 		</article>
 	);
 }

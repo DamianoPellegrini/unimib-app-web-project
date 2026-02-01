@@ -14,3 +14,10 @@ export interface DetailNavState {
 	/** Ordered list of all items of that entity (unfiltered). */
 	items: DetailNavItem[];
 }
+
+/** Type guard that checks whether a value is a valid {@link DetailNavState}. */
+export function isDetailNavState(value: unknown): value is DetailNavState {
+	if (typeof value !== "object" || value === null) return false;
+	const obj = value as Record<string, unknown>;
+	return typeof obj.basePath === "string" && Array.isArray(obj.items);
+}

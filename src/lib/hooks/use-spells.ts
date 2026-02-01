@@ -8,6 +8,8 @@ import { useFetch } from "./use-fetch";
 type UseSpellsOptions = {
 	textSearch?: string;
 	type?: SpellType;
+	/** When true, skips the fetch entirely (e.g. when nav state is already available). */
+	skip?: boolean;
 };
 
 /**
@@ -15,10 +17,11 @@ type UseSpellsOptions = {
  * Also builds a {@link DetailNavState} from the unfiltered list for prev/next navigation.
  */
 export function useSpells(filters?: UseSpellsOptions) {
+	const { textSearch, type, skip } = filters ?? {};
 	const { data, ...rest } = useFetch<Spell[]>(`${API_BASE_URL}/Spells`, {
 		headers: { "Cache-Control": "max-age=31536000, immutable" },
+		fetchOnMount: !skip,
 	});
-	const { textSearch, type } = filters ?? {};
 
 	// Client-side filtering to avoid debouncing and potential API rate limits
 	const filteredSpells = React.useMemo(

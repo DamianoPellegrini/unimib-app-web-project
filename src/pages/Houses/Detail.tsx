@@ -1,16 +1,20 @@
-import { Link, useParams } from "react-router";
+import { Link, useLocation, useParams } from "react-router";
 import { getHouseColor } from "../../lib/colors";
 import DetailNav from "../../lib/components/DetailNav";
 import DetailSkeleton from "../../lib/components/DetailSkeleton";
 import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import { Shield } from "../../lib/components/icons";
-import { useHouse } from "../../lib/hooks/use-houses";
+import { useHouse, useHouses } from "../../lib/hooks/use-houses";
+import { isDetailNavState } from "../../lib/models/detail-nav";
 import type { DetailNavState } from "../../lib/models/detail-nav";
 
 /** Detail page for a single Hogwarts house, showing traits, heads, and house info. */
 function HouseDetail() {
 	const { id } = useParams();
+	const { state } = useLocation();
+	const hasNavState = isDetailNavState(state);
 	const { house, isLoading, error, refetchAsync } = useHouse(id!);
+	const { navState } = useHouses({ skip: hasNavState });
 
 	if (isLoading) return <DetailSkeleton rows={4} />;
 	if (error)
@@ -100,7 +104,7 @@ function HouseDetail() {
 				</section>
 			)}
 
-			<DetailNav />
+			<DetailNav fallback={navState} />
 		</article>
 	);
 }

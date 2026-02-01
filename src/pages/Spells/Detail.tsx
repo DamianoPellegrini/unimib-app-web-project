@@ -1,15 +1,19 @@
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import DetailNav from "../../lib/components/DetailNav";
 import DetailSkeleton from "../../lib/components/DetailSkeleton";
 import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import { getSpellColor } from "../../lib/colors";
 import { Wand } from "../../lib/components/icons";
-import { useSpell } from "../../lib/hooks/use-spells";
+import { useSpell, useSpells } from "../../lib/hooks/use-spells";
+import { isDetailNavState } from "../../lib/models/detail-nav";
 
 /** Detail page for a single spell, showing type, light, effect, and creator. */
 function SpellDetail() {
 	const { id } = useParams();
+	const { state } = useLocation();
+	const hasNavState = isDetailNavState(state);
 	const { spell, isLoading, error, refetchAsync } = useSpell(id!);
+	const { navState } = useSpells({ skip: hasNavState });
 
 	if (isLoading) return <DetailSkeleton rows={4} />;
 	if (error)
@@ -54,7 +58,7 @@ function SpellDetail() {
 				</dl>
 			</section>
 
-			<DetailNav />
+			<DetailNav fallback={navState} />
 		</article>
 	);
 }

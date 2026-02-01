@@ -1,15 +1,19 @@
-import { Link, useParams } from "react-router";
+import { Link, useLocation, useParams } from "react-router";
 import DetailNav from "../../lib/components/DetailNav";
 import DetailSkeleton from "../../lib/components/DetailSkeleton";
 import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import { Hourglass, Monster, Potion } from "../../lib/components/icons";
-import { useElixir } from "../../lib/hooks/use-elixirs";
+import { useElixir, useElixirs } from "../../lib/hooks/use-elixirs";
+import { isDetailNavState } from "../../lib/models/detail-nav";
 import type { DetailNavState } from "../../lib/models/detail-nav";
 
 /** Detail page for a single elixir, showing properties, ingredients, and inventors. */
 function ElixirDetail() {
 	const { id } = useParams();
+	const { state } = useLocation();
+	const hasNavState = isDetailNavState(state);
 	const { elixir, isLoading, error, refetchAsync } = useElixir(id!);
+	const { navState } = useElixirs({ skip: hasNavState });
 
 	if (isLoading) return <DetailSkeleton rows={4} />;
 	if (error)
@@ -107,7 +111,7 @@ function ElixirDetail() {
 				</section>
 			)}
 
-			<DetailNav />
+			<DetailNav fallback={navState} />
 		</article>
 	);
 }

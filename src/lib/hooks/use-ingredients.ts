@@ -7,6 +7,8 @@ import { useFetch } from "./use-fetch";
 /** Filter options for the ingredient list. */
 type UseIngredientsOptions = {
 	textSearch?: string;
+	/** When true, skips the fetch entirely (e.g. when nav state is already available). */
+	skip?: boolean;
 };
 
 /**
@@ -14,8 +16,10 @@ type UseIngredientsOptions = {
  * Also builds a {@link DetailNavState} from the unfiltered list for prev/next navigation.
  */
 export function useIngredients(filters?: UseIngredientsOptions) {
-	const { data, ...rest } = useFetch<ElixirIngredient[]>(`${API_BASE_URL}/Ingredients`);
-	const { textSearch } = filters ?? {};
+	const { textSearch, skip } = filters ?? {};
+	const { data, ...rest } = useFetch<ElixirIngredient[]>(`${API_BASE_URL}/Ingredients`, {
+		fetchOnMount: !skip,
+	});
 
 	const normalizedText = React.useMemo(() => textSearch?.toLowerCase(), [textSearch]);
 

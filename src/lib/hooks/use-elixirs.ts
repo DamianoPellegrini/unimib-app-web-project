@@ -8,6 +8,8 @@ import { useFetch } from "./use-fetch";
 type UseElixirsOptions = {
 	textSearch?: string;
 	difficulty?: ElixirDifficulty;
+	/** When true, skips the fetch entirely (e.g. when nav state is already available). */
+	skip?: boolean;
 };
 
 /**
@@ -15,10 +17,11 @@ type UseElixirsOptions = {
  * Also builds a {@link DetailNavState} from the unfiltered list for prev/next navigation.
  */
 export function useElixirs(filters?: UseElixirsOptions) {
+	const { textSearch, difficulty, skip } = filters ?? {};
 	const { data, ...rest } = useFetch<Elixir[]>(`${API_BASE_URL}/Elixirs`, {
 		headers: { "Cache-Control": "max-age=31536000, immutable" },
+		fetchOnMount: !skip,
 	});
-	const { textSearch, difficulty } = filters ?? {};
 
 	// Client-side filtering to avoid debouncing and potential API rate limits
 	const filteredElixirs = React.useMemo(

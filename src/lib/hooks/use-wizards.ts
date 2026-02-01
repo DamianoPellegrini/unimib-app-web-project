@@ -7,6 +7,8 @@ import { useFetch } from "./use-fetch";
 /** Filter options for the wizard list. */
 type UseWizardsOptions = {
 	textSearch?: string;
+	/** When true, skips the fetch entirely (e.g. when nav state is already available). */
+	skip?: boolean;
 };
 
 /**
@@ -14,10 +16,11 @@ type UseWizardsOptions = {
  * Also builds a {@link DetailNavState} from the unfiltered list for prev/next navigation.
  */
 export function useWizards(filters?: UseWizardsOptions) {
+	const { textSearch, skip } = filters ?? {};
 	const { data, ...rest } = useFetch<Wizard[]>(`${API_BASE_URL}/Wizards`, {
 		headers: { "Cache-Control": "max-age=31536000, immutable" },
+		fetchOnMount: !skip,
 	});
-	const { textSearch } = filters ?? {};
 
 	const normalizedText = React.useMemo(() => textSearch?.toLowerCase(), [textSearch]);
 

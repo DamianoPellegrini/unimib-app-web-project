@@ -7,6 +7,8 @@ import { useFetch } from "./use-fetch";
 /** Filter options for the house list. */
 type UseHousesOptions = {
 	textSearch?: string;
+	/** When true, skips the fetch entirely (e.g. when nav state is already available). */
+	skip?: boolean;
 };
 
 /**
@@ -14,8 +16,10 @@ type UseHousesOptions = {
  * Also builds a {@link DetailNavState} from the unfiltered list for prev/next navigation.
  */
 export function useHouses(filters?: UseHousesOptions) {
-	const { data, ...rest } = useFetch<House[]>(`${API_BASE_URL}/Houses`);
-	const { textSearch } = filters ?? {};
+	const { textSearch, skip } = filters ?? {};
+	const { data, ...rest } = useFetch<House[]>(`${API_BASE_URL}/Houses`, {
+		fetchOnMount: !skip,
+	});
 
 	const normalizedText = React.useMemo(() => textSearch?.toLowerCase(), [textSearch]);
 
