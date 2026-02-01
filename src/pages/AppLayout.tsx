@@ -1,4 +1,4 @@
-import { Outlet, Link } from "react-router";
+import { Outlet, NavLink } from "react-router";
 
 function AppLayout() {
 	return (
@@ -7,25 +7,27 @@ function AppLayout() {
 				<nav>
 					<menu>
 						<li>
-							<Link to="/">Introduction</Link>
+							<NavLink to="/" end>
+								Introduction
+							</NavLink>
 						</li>
 						<li>
-							<Link to="/elixirs">Elixirs</Link>
+							<NavLink to="/elixirs">Elixirs</NavLink>
 						</li>
 						<li>
-							<Link to="/houses">Houses</Link>
+							<NavLink to="/houses">Houses</NavLink>
 						</li>
 						<li>
-							<Link to="/ingredients">Ingredients</Link>
+							<NavLink to="/ingredients">Ingredients</NavLink>
 						</li>
 						<li>
-							<Link to="/magical-creatures">Magical Creatures</Link>
+							<NavLink to="/magical-creatures">Magical Creatures</NavLink>
 						</li>
 						<li>
-							<Link to="/spells">Spells</Link>
+							<NavLink to="/spells">Spells</NavLink>
 						</li>
 						<li>
-							<Link to="/wizards">Wizards</Link>
+							<NavLink to="/wizards">Wizards</NavLink>
 						</li>
 					</menu>
 				</nav>

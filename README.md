@@ -1,6 +1,6 @@
 # The Hogwarts Compendium
 
-A wizarding world reference built with React 19, TypeScript, and the [Wizard World API](https://wizard-world-api.herokuapp.com). Browse spells, houses, elixirs, ingredients, magical creatures, and wizards — styled with semantic HTML, modern CSS, and View Transitions.
+A wizarding world reference built with React 19, TypeScript, and the [Wizard World API](https://wizard-world-api.herokuapp.com). Browse spells, houses, elixirs, ingredients, magical creatures, and wizards - styled with semantic HTML, modern CSS, and View Transitions.
 
 ## Live demo
 
@@ -20,15 +20,15 @@ A wizarding world reference built with React 19, TypeScript, and the [Wizard Wor
 
 ## Features
 
-- **Six browsable categories** — Elixirs, Houses, Spells, Wizards, Ingredients, and Magical Creatures, each with index and detail views
-- **Client-side search** — filter any collection in real time
-- **View Transitions API** — smooth morph animations when navigating between card grids and detail pages
-- **Semantic HTML** — `<article>`, `<section>`, `<search>`, `<hgroup>`, `<dl>`, `<time>`, `<data>` used throughout per MDN guidelines
-- **Modern CSS** — custom properties for spacing and theming, CSS nesting, `oklch()` color system, `color-mix()`, no preprocessor
-- **Custom `useFetch` hook** — generic data fetching with automatic retries, abort handling, and request deduplication via `requestKey`
-- **Skeleton loading** — reusable `CardSkeleton` and `DetailSkeleton` components with pulse animations
-- **Responsive grid layout** — auto-filling card grids that adapt to viewport width
-- **Custom SVG icons** — hand-crafted icons for each category (Potion, Shield, Wand, Hat, Leaf, Paw)
+- **Six browsable categories** - Elixirs, Houses, Spells, Wizards, Ingredients, and Magical Creatures, each with index and detail views
+- **Client-side search** - filter any collection in real time
+- **View Transitions API** - smooth morph animations when navigating between card grids and detail pages
+- **Semantic HTML** - `<article>`, `<section>`, `<search>`, `<hgroup>`, `<dl>`, `<time>`, `<data>` used throughout per MDN guidelines
+- **Modern CSS** - custom properties for spacing and theming, CSS nesting, `oklch()` color system, `color-mix()`, no preprocessor
+- **Custom `useFetch` hook** - generic data fetching with automatic retries, abort handling, and request deduplication via `requestKey`
+- **Skeleton loading** - reusable `CardSkeleton` and `DetailSkeleton` components with pulse animations
+- **Responsive grid layout** - auto-filling card grids that adapt to viewport width
+- **Custom SVG icons** - hand-crafted icons for each category (Potion, Shield, Wand, Hat, Leaf, Paw)
 
 ## Project structure
 
@@ -103,7 +103,7 @@ bun run lint      # Run ESLint
 
 ## Data source
 
-All data is fetched from the [Wizard World API](https://wizard-world-api.herokuapp.com) ([GitHub](https://github.com/MossPiglets/WizardWorldAPI)) — an open, community-maintained REST API for Harry Potter universe data.
+All data is fetched from the [Wizard World API](https://wizard-world-api.herokuapp.com) ([GitHub](https://github.com/MossPiglets/WizardWorldAPI)) - an open, community-maintained REST API for Harry Potter universe data.
 
 ## License
 

@@ -6,7 +6,7 @@
 	--panel: var(--color-wood-800);
 	--muted-text: var(--color-paper-50);
 	--text: var(--color-paper-100);
-	--accent: #9f7aea;
+	--accent: oklch(0.65 0.15 295);
 
 	/*SPACING*/
 	--space-xs: 0.25rem;
@@ -87,7 +87,7 @@ menu {
 
 html {
 	scrollbar-width: thin;
-	scrollbar-color: var(--color-wood-600) var(--color-wood-900);
+	scrollbar-color: var(--accent) var(--color-wood-900);
 
 	&::-webkit-scrollbar {
 		width: 8px;
@@ -96,7 +96,7 @@ html {
 		background: var(--color-wood-900);
 	}
 	&::-webkit-scrollbar-thumb {
-		background: var(--color-wood-600);
+		background: var(--accent);
 		border-radius: 4px;
 	}
 }
@@ -148,6 +148,7 @@ body > main > header {
 		padding: var(--space-sm);
 		border-radius: var(--space-sm);
 		background-color: var(--color-wood-700);
+		color: var(--accent);
 	}
 
 	hgroup {
@@ -276,9 +277,8 @@ nav {
 			text-decoration: none;
 		}
 		&[aria-current="page"] {
-			background: var(--color-wood-700);
+			background: var(--color-wood-600);
 			color: var(--text);
-			border-color: var(--color-wood-600);
 		}
 	}
 }
@@ -414,6 +414,7 @@ a[data-card] {
 			padding: var(--space-sm);
 			border-radius: var(--space-sm);
 			background-color: var(--color-wood-700);
+			color: var(--accent);
 		}
 
 		hgroup {
@@ -509,6 +510,9 @@ a[data-card] {
 			display: flex;
 			align-items: center;
 			gap: var(--space-sm);
+			.icon {
+				color: var(--accent);
+			}
 		}
 		p {
 			color: var(--muted-text);
