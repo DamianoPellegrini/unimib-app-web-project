@@ -1,0 +1,41 @@
+:root {
+	--color-wood-base-light: oklch(0.5 0.02 50);
+	--color-wood-base-dark: oklch(0.4 0.01 30);
+	--color-wood-base: light-dark(var(--color-wood-base-light), var(--color-wood-base-dark));
+
+	--color-wood-50: oklch(from var(--color-wood-base) calc(l + 0.2) c h);
+	--color-wood-100: oklch(from var(--color-wood-base) calc(l + 0.15) c h);
+	--color-wood-200: oklch(from var(--color-wood-base) calc(l + 0.1) c h);
+	--color-wood-300: oklch(from var(--color-wood-base) calc(l + 0.05) c h);
+	--color-wood-400: oklch(from var(--color-wood-base) calc(l + 0.02) c h);
+	--color-wood-500: var(--color-wood-base);
+	--color-wood-600: oklch(from var(--color-wood-base) calc(l - 0.02) c h);
+	--color-wood-700: oklch(from var(--color-wood-base) calc(l - 0.05) c h);
+	--color-wood-800: oklch(from var(--color-wood-base) calc(l - 0.1) c h);
+	--color-wood-900: oklch(from var(--color-wood-base) calc(l - 0.15) c h);
+	--color-wood-950: oklch(from var(--color-wood-base) calc(l - 0.2) c h);
+
+	--color-paper-base-light: oklch(0.87 0.02 102);
+	--color-paper-base-dark: oklch(0.87 0.0048 132);
+	--color-paper-base: light-dark(var(--color-paper-base-light), var(--color-paper-base-dark));
+
+	--color-paper-50: oklch(from var(--color-paper-base) calc(l + 0.2) c h);
+	--color-paper-100: oklch(from var(--color-paper-base) calc(l + 0.16) c h);
+	--color-paper-200: oklch(from var(--color-paper-base) calc(l + 0.12) c h);
+	--color-paper-300: oklch(from var(--color-paper-base) calc(l + 0.08) c h);
+	--color-paper-400: oklch(from var(--color-paper-base) calc(l + 0.05) c h);
+	--color-paper-500: var(--color-paper-base);
+	--color-paper-600: oklch(from var(--color-paper-base) calc(l - 0.05) c h);
+	--color-paper-700: oklch(from var(--color-paper-base) calc(l - 0.1) c h);
+	--color-paper-800: oklch(from var(--color-paper-base) calc(l - 0.2) c h);
+	--color-paper-900: oklch(from var(--color-paper-base) calc(l - 0.3) c h);
+	--color-paper-950: oklch(from var(--color-paper-base) calc(l - 0.4) c h);
+
+	/*Color for pattern is  --color-paper-700*/
+	--star-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cg fill='%239e9764' fill-opacity='0.1'%3E%3Cpolygon fill-rule='evenodd' points='8 4 12 6 8 8 6 12 4 8 0 6 4 4 6 0 8 4'/%3E%3C/g%3E%3C/svg%3E");
+
+	@media (prefers-color-scheme: dark) {
+		/*Color for pattern is  --color-paper-700*/
+		--star-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cg fill='%236d7e60' fill-opacity='0.1'%3E%3Cpolygon fill-rule='evenodd' points='8 4 12 6 8 8 6 12 4 8 0 6 4 4 6 0 8 4'/%3E%3C/g%3E%3C/svg%3E");
+	}
+}
