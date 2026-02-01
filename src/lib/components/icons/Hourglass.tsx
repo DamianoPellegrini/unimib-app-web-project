@@ -1,3 +1,4 @@
+/** Hourglass icon used for brewing time indicators. */
 export default function Hourglass(props: React.PropsWithoutRef<React.SVGProps<SVGSVGElement>>) {
 	return (
 		<svg

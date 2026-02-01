@@ -1,8 +1,11 @@
 import { useParams } from "react-router";
+import DetailNav from "../../lib/components/DetailNav";
 import DetailSkeleton from "../../lib/components/DetailSkeleton";
+import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import { Leaf } from "../../lib/components/icons";
 import { useIngredient } from "../../lib/hooks/use-ingredients";
 
+/** Detail page for a single ingredient. */
 function IngredientDetail() {
 	const { id } = useParams();
 	const { ingredient, isLoading, error, refetchAsync } = useIngredient(id!);
@@ -10,10 +13,7 @@ function IngredientDetail() {
 	if (isLoading) return <DetailSkeleton rows={1} />;
 	if (error)
 		return (
-			<div data-error>
-				<p>Failed to load ingredient.</p>
-				<button onClick={refetchAsync}>Retry</button>
-			</div>
+			<ErrorDisplay entity="ingredient" status={error.status} statusText={error.statusText} onRetry={refetchAsync} />
 		);
 	if (!ingredient) return <p>Ingredient not found.</p>;
 
@@ -27,6 +27,8 @@ function IngredientDetail() {
 					</h1>
 				</hgroup>
 			</header>
+
+			<DetailNav />
 		</article>
 	);
 }

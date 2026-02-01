@@ -1,22 +1,32 @@
 import { Link, useParams } from "react-router";
 import { getHouseColor } from "../../lib/colors";
+import DetailNav from "../../lib/components/DetailNav";
 import DetailSkeleton from "../../lib/components/DetailSkeleton";
+import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import { Shield } from "../../lib/components/icons";
 import { useHouse } from "../../lib/hooks/use-houses";
+import type { DetailNavState } from "../../lib/models/detail-nav";
 
+/** Detail page for a single Hogwarts house, showing traits, heads, and house info. */
 function HouseDetail() {
 	const { id } = useParams();
 	const { house, isLoading, error, refetchAsync } = useHouse(id!);
 
 	if (isLoading) return <DetailSkeleton rows={4} />;
 	if (error)
-		return (
-			<div data-error>
-				<p>Failed to load house.</p>
-				<button onClick={refetchAsync}>Retry</button>
-			</div>
-		);
+		return <ErrorDisplay entity="house" status={error.status} statusText={error.statusText} onRetry={refetchAsync} />;
 	if (!house) return <p>House not found.</p>;
+
+	const headNav: DetailNavState | undefined =
+		house.heads && house.heads.length > 0
+			? {
+					basePath: "/wizards",
+					items: house.heads.map((h) => ({
+						id: h.id,
+						name: [h.firstName, h.lastName].filter(Boolean).join(" ") || "Unknown wizard",
+					})),
+				}
+			: undefined;
 
 	return (
 		<article className="DetailPage">
@@ -70,7 +80,7 @@ function HouseDetail() {
 					<ul>
 						{house.heads.map((head) => (
 							<li key={head.id}>
-								<Link to={`/wizards/${head.id}`} viewTransition>
+								<Link to={`/wizards/${head.id}`} state={headNav} viewTransition>
 									{[head.firstName, head.lastName].filter(Boolean).join(" ")}
 								</Link>
 							</li>
@@ -89,6 +99,8 @@ function HouseDetail() {
 					</ul>
 				</section>
 			)}
+
+			<DetailNav />
 		</article>
 	);
 }

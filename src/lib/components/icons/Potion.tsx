@@ -1,3 +1,4 @@
+/** Potion flask icon. Accepts standard SVG props. */
 export default function Potion(props: React.PropsWithoutRef<React.SVGProps<SVGSVGElement>>) {
 	return (
 		<svg

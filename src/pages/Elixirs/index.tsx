@@ -1,14 +1,16 @@
 import React from "react";
 import CardSkeleton from "../../lib/components/CardSkeleton";
 import ElixirCard from "../../lib/components/ElixirCard";
+import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import { Potion } from "../../lib/components/icons";
 import { useElixirs } from "../../lib/hooks/use-elixirs";
 
 const SKELETON_COUNT = 6;
 
+/** Index page that lists all elixirs with a text search input. */
 function ElixirsIndex() {
 	const [search, setSearch] = React.useState("");
-	const { elixirs, isLoading, error, refetchAsync } = useElixirs({
+	const { elixirs, navState, isLoading, error, refetchAsync } = useElixirs({
 		textSearch: search,
 	});
 
@@ -33,10 +35,7 @@ function ElixirsIndex() {
 					<input type="text" placeholder="Search elixirs..." onInput={(e) => setSearch(e.currentTarget.value)} />
 				</search>
 				{error && (
-					<div data-error>
-						<p>Failed to load elixirs.</p>
-						<button onClick={refetchAsync}>Retry</button>
-					</div>
+					<ErrorDisplay entity="elixirs" status={error.status} statusText={error.statusText} onRetry={refetchAsync} />
 				)}
 				{isLoading && (
 					<ul data-grid>
@@ -54,7 +53,7 @@ function ElixirsIndex() {
 					<ul data-grid>
 						{elixirs.map((elixir) => (
 							<data key={elixir.id} value={elixir.id}>
-								<ElixirCard elixir={elixir} />
+								<ElixirCard elixir={elixir} navState={navState} />
 							</data>
 						))}
 					</ul>

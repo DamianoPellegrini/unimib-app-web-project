@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Route, Routes } from "react-router";
+import { RouterProvider, createBrowserRouter } from "react-router";
 import "./index.css";
 import App from "./pages/App";
 import AppLayout from "./pages/AppLayout";
@@ -17,38 +17,65 @@ import SpellDetail from "./pages/Spells/Detail";
 import Wizards from "./pages/Wizards";
 import WizardDetail from "./pages/Wizards/Detail";
 
+/**
+ * Here using createBrowserRouter instead of the BrowserRouter provider component just to support view transition
+ */
+const router = createBrowserRouter(
+	[
+		{
+			element: <AppLayout />,
+			children: [
+				{ index: true, element: <App /> },
+				{
+					path: "elixirs",
+					children: [
+						{ index: true, element: <Elixirs /> },
+						{ path: ":id", element: <ElixirDetail /> },
+					],
+				},
+				{
+					path: "houses",
+					children: [
+						{ index: true, element: <Houses /> },
+						{ path: ":id", element: <HouseDetail /> },
+					],
+				},
+				{
+					path: "ingredients",
+					children: [
+						{ index: true, element: <Ingredients /> },
+						{ path: ":id", element: <IngredientDetail /> },
+					],
+				},
+				{
+					path: "magical-creatures",
+					children: [
+						{ index: true, element: <MagicalCretures /> },
+						{ path: ":id", element: <MagicalCretureDetail /> },
+					],
+				},
+				{
+					path: "spells",
+					children: [
+						{ index: true, element: <Spells /> },
+						{ path: ":id", element: <SpellDetail /> },
+					],
+				},
+				{
+					path: "wizards",
+					children: [
+						{ index: true, element: <Wizards /> },
+						{ path: ":id", element: <WizardDetail /> },
+					],
+				},
+			],
+		},
+	],
+	{ basename: import.meta.env.BASE_URL },
+);
+
 createRoot(document.getElementsByTagName("body")[0]).render(
 	<StrictMode>
-		<BrowserRouter basename={import.meta.env.BASE_URL}>
-			<Routes>
-				<Route element={<AppLayout />}>
-					<Route index element={<App />} />
-					<Route path="elixirs">
-						<Route index element={<Elixirs />} />
-						<Route path=":id" element={<ElixirDetail />} />
-					</Route>
-					<Route path="houses">
-						<Route index element={<Houses />} />
-						<Route path=":id" element={<HouseDetail />} />
-					</Route>
-					<Route path="ingredients">
-						<Route index element={<Ingredients />} />
-						<Route path=":id" element={<IngredientDetail />} />
-					</Route>
-					<Route path="magical-creatures">
-						<Route index element={<MagicalCretures />} />
-						<Route path=":id" element={<MagicalCretureDetail />} />
-					</Route>
-					<Route path="spells">
-						<Route index element={<Spells />} />
-						<Route path=":id" element={<SpellDetail />} />
-					</Route>
-					<Route path="wizards">
-						<Route index element={<Wizards />} />
-						<Route path=":id" element={<WizardDetail />} />
-					</Route>
-				</Route>
-			</Routes>
-		</BrowserRouter>
+		<RouterProvider router={router} />
 	</StrictMode>,
 );

@@ -1,14 +1,16 @@
 import React from "react";
 import CardSkeleton from "../../lib/components/CardSkeleton";
+import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import HouseCard from "../../lib/components/HouseCard";
 import { Shield } from "../../lib/components/icons";
 import { useHouses } from "../../lib/hooks/use-houses";
 
 const SKELETON_COUNT = 4;
 
+/** Index page that lists all Hogwarts houses with a text search input. */
 function HousesIndex() {
 	const [search, setSearch] = React.useState("");
-	const { houses, isLoading, error, refetchAsync } = useHouses({
+	const { houses, navState, isLoading, error, refetchAsync } = useHouses({
 		textSearch: search,
 	});
 
@@ -32,10 +34,7 @@ function HousesIndex() {
 					<input type="text" placeholder="Search houses..." onInput={(e) => setSearch(e.currentTarget.value)} />
 				</search>
 				{error && (
-					<div data-error>
-						<p>Failed to load houses.</p>
-						<button onClick={refetchAsync}>Retry</button>
-					</div>
+					<ErrorDisplay entity="houses" status={error.status} statusText={error.statusText} onRetry={refetchAsync} />
 				)}
 				{isLoading && (
 					<ul data-grid>
@@ -53,7 +52,7 @@ function HousesIndex() {
 					<ul data-grid>
 						{houses.map((house) => (
 							<data key={house.id} value={house.id}>
-								<HouseCard house={house} />
+								<HouseCard house={house} navState={navState} />
 							</data>
 						))}
 					</ul>

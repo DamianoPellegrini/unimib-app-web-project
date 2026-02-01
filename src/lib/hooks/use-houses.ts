@@ -1,19 +1,25 @@
 import React from "react";
 import { API_BASE_URL } from "../constants";
+import type { DetailNavState } from "../models/detail-nav";
 import type { House } from "../models/house";
 import { useFetch } from "./use-fetch";
 
+/** Filter options for the house list. */
 type UseHousesOptions = {
 	textSearch?: string;
 };
 
+/**
+ * Fetches all houses and applies client-side text filtering.
+ * Also builds a {@link DetailNavState} from the unfiltered list for prev/next navigation.
+ */
 export function useHouses(filters?: UseHousesOptions) {
 	const { data, ...rest } = useFetch<House[]>(`${API_BASE_URL}/Houses`);
 	const { textSearch } = filters ?? {};
 
 	const normalizedText = React.useMemo(() => textSearch?.toLowerCase(), [textSearch]);
 
-	// Filtering lato client per evitare di dove fare debouncing ed evitare eventuali rate limit con API
+	// Client-side filtering to avoid debouncing and potential API rate limits
 	const filteredElixirs = React.useMemo(
 		() =>
 			normalizedText
@@ -37,9 +43,18 @@ export function useHouses(filters?: UseHousesOptions) {
 		[normalizedText, data],
 	);
 
-	return { houses: filteredElixirs, ...rest };
+	const navState = React.useMemo<DetailNavState | undefined>(
+		() =>
+			data
+				? { basePath: "/houses", items: data.map((h) => ({ id: h.id, name: h.name ?? "Unknown house" })) }
+				: undefined,
+		[data],
+	);
+
+	return { houses: filteredElixirs, navState, ...rest };
 }
 
+/** Fetches a single house by its id. */
 export function useHouse(id: string) {
 	const { data, ...rest } = useFetch<House>(`${API_BASE_URL}/Houses/${id}`);
 	return { house: data, ...rest };

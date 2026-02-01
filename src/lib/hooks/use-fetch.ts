@@ -1,8 +1,10 @@
 import React from "react";
 import { sleep } from "../utils";
 
+/** Artificial delay (ms) applied in dev mode to make loading states visible. */
 const DEV_DELAY_MS = import.meta.env.DEV ? 1000 : 0;
 
+/** Shape of the error object stored in state when a request fails. */
 type HTTPError = {
 	status: number;
 	statusText: string;
@@ -11,37 +13,38 @@ type HTTPError = {
 
 type RequestInitWithoutSignal = Omit<RequestInit, "signal">;
 
+/** Options accepted by {@link useFetch} on top of the standard RequestInit fields. */
 type UseFetchOptions = {
 	/**
-	 * Numero di tentativi aggiuntivi dopo il primo fallimento.
+	 * Number of extra attempts after the first failure.
 	 * @default 0
 	 */
 	retries?: number;
 	/**
-	 * Millisecondi di attesa tra un tentativo e il successivo.
+	 * Milliseconds to wait between retries.
 	 * @default 500
 	 */
 	retryDelayMs?: number;
 	/**
-	 * Callback che decide se ritentare dato un errore. Viene salvata in un ref
-	 * per evitare che una nuova reference causi un refetch.
+	 * Callback that decides whether to retry a given error.
+	 * Stored in a ref so that a new reference does not trigger a refetch.
 	 * @default () => true
 	 */
 	retryOn?: (error: unknown) => boolean;
 	/**
-	 * Se `true`, la richiesta parte automaticamente al mount.
+	 * If `true`, the request fires automatically on mount.
 	 * @default true
 	 */
 	fetchOnMount?: boolean;
 	/**
-	 * Lista di valori primitivi che, se modificati, causano un refetch.
-	 * Vengono espansi in un dependency array, cosi' il
-	 * confronto avviene per valore e non per riferimento rispetto all'oggetto options.
+	 * List of primitive values that, when changed, cause a refetch.
+	 * They are spread into the dependency array so comparison happens
+	 * by value rather than by reference on the options object.
 	 *
-	 * Utile quando proprietà di `RequestInit` (es. `headers`) dipendono da
-	 * stato che cambia nel tempo: siccome `fetchInit` viene catturato nella
-	 * closure, un cambio di `requestKey` ricrea `performFetch` e cattura
-	 * i valori aggiornati.
+	 * Useful when `RequestInit` properties (e.g. `headers`) depend on
+	 * state that changes over time: since `fetchInit` is captured in the
+	 * closure, a change in `requestKey` recreates `performFetch` and
+	 * captures the updated values.
 	 *
 	 * @example
 	 * ```tsx
@@ -63,22 +66,22 @@ type UseFetchOptions = {
 } & RequestInitWithoutSignal;
 
 /**
- * Hook per eseguire richieste HTTP con gestione di loading, errori e retry.
+ * Hook for making HTTP requests with loading, error, and retry handling.
  *
- * Le proprietà di {@link RequestInit} (es. `headers`, `method`) vengono
- * passate direttamente nella funzione {@link fetch}.
- * Se i loro valori dipendono da stato dinamico, usare `requestKey` per
- * segnalare a React quando rifare la richiesta.
+ * {@link RequestInit} properties (e.g. `headers`, `method`) are passed
+ * straight to the {@link fetch} call.
+ * If their values depend on dynamic state, use `requestKey` to tell
+ * React when to re-run the request.
  *
  * @example
  * ```tsx
- * // Richiesta semplice
+ * // Simple request
  * const { data, isLoading, error } = useFetch<User[]>("/api/users");
  * ```
  *
  * @example
  * ```tsx
- * // Con retry e headers dinamici
+ * // With retry and dynamic headers
  * const { data } = useFetch<Profile>(`/api/profile`, {
  *   headers: { Authorization: `Bearer ${token}` },
  *   retries: 2,
@@ -87,8 +90,8 @@ type UseFetchOptions = {
  * });
  * ```
  *
- * @param input URL della richiesta, `string` o {@link URL}
- * @param options Opzioni del hook + proprietà di {@link RequestInit} (senza `signal`)
+ * @param input Request URL, `string` or {@link URL}
+ * @param options Hook options + {@link RequestInit} properties (without `signal`)
  * @returns `{ data, error, isLoading, refetchAsync }`
  */
 export function useFetch<T>(input: string | URL, options?: UseFetchOptions) {

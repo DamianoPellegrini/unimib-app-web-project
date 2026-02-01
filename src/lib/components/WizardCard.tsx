@@ -1,11 +1,14 @@
 import { Link } from "react-router";
+import type { DetailNavState } from "../models/detail-nav";
 import type { Wizard } from "../models/wizard";
 import { Hat } from "./icons";
 
 type WizardCardProps = {
 	wizard: Wizard;
+	navState?: DetailNavState;
 };
 
+/** Palette of pastel oklch colours assigned to wizard cards based on their id. */
 const COLORS = [
 	"oklch(0.8 0.08 289.56)", // purple
 	"oklch(0.8 0.08 247.55)", // blue
@@ -16,11 +19,12 @@ const COLORS = [
 	"oklch(0.8 0.08 212.23)", // teal
 ];
 
-function WizardCard({ wizard }: WizardCardProps) {
+/** Card for a single wizard, shown in the grid on the wizards index page. */
+function WizardCard({ wizard, navState }: WizardCardProps) {
 	const displayName = [wizard.firstName, wizard.lastName].filter(Boolean).join(" ") || "Unknown wizard";
 
 	return (
-		<Link to={`/wizards/${wizard.id}`} data-card className="WizardCard" viewTransition>
+		<Link to={`/wizards/${wizard.id}`} state={navState} data-card className="WizardCard" viewTransition>
 			<header>
 				<Hat className="big" style={{ color: COLORS[(wizard.id.charCodeAt(0) * 10) % COLORS.length] }} />
 				<hgroup>

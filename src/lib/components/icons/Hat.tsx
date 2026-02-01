@@ -1,3 +1,4 @@
+/** Graduation hat icon used for wizards. */
 export default function Hat(props: React.PropsWithoutRef<React.SVGProps<SVGSVGElement>>) {
 	return (
 		<svg

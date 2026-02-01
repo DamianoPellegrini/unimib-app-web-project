@@ -1,14 +1,16 @@
 import React from "react";
 import CardSkeleton from "../../lib/components/CardSkeleton";
+import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import MagicalCreatureCard from "../../lib/components/MagicalCreatureCard";
 import { Paw } from "../../lib/components/icons";
 import { useMagicalCreatures } from "../../lib/hooks/use-magical-creatures";
 
 const SKELETON_COUNT = 6;
 
+/** Index page that lists all magical creatures with a text search input. */
 function MagicalCreaturesIndex() {
 	const [search, setSearch] = React.useState("");
-	const { creatures, isLoading, error, refetchAsync } = useMagicalCreatures({
+	const { creatures, navState, isLoading, error, refetchAsync } = useMagicalCreatures({
 		textSearch: search,
 	});
 
@@ -32,10 +34,7 @@ function MagicalCreaturesIndex() {
 					<input type="text" placeholder="Search creatures..." onInput={(e) => setSearch(e.currentTarget.value)} />
 				</search>
 				{error && (
-					<div data-error>
-						<p>Failed to load creatures.</p>
-						<button onClick={refetchAsync}>Retry</button>
-					</div>
+					<ErrorDisplay entity="creatures" status={error.status} statusText={error.statusText} onRetry={refetchAsync} />
 				)}
 				{isLoading && (
 					<ul data-grid>
@@ -53,7 +52,7 @@ function MagicalCreaturesIndex() {
 					<ul data-grid>
 						{creatures.map((creature) => (
 							<data key={creature.id} value={creature.id}>
-								<MagicalCreatureCard creature={creature} />
+								<MagicalCreatureCard creature={creature} navState={navState} />
 							</data>
 						))}
 					</ul>

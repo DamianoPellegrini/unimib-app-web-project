@@ -3,6 +3,7 @@ type DetailSkeletonProps = {
 	rows?: number;
 };
 
+/** Placeholder skeleton shown while a detail page's data is loading. */
 function DetailSkeleton({ rows = 3 }: DetailSkeletonProps) {
 	return (
 		<div className="DetailPage" data-skeleton aria-busy="true">

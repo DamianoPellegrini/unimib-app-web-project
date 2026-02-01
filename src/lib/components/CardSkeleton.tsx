@@ -7,6 +7,7 @@ type CardSkeletonProps = {
 	footer?: boolean;
 };
 
+/** Placeholder skeleton shown while a card's data is loading. */
 function CardSkeleton({ subtitle = false, body = false, footer = false }: CardSkeletonProps) {
 	return (
 		<div data-skeleton>

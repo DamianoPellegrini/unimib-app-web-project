@@ -1,3 +1,4 @@
+/** Paw icon used for magical creatures. */
 export default function Paw(props: React.PropsWithoutRef<React.SVGProps<SVGSVGElement>>) {
 	return (
 		<svg

@@ -1,17 +1,20 @@
 import { Link } from "react-router";
 import { getHouseColor } from "../colors";
+import type { DetailNavState } from "../models/detail-nav";
 import type { House } from "../models/house";
 import { Shield } from "./icons";
 
 type HouseCardProps = {
 	house: House;
+	navState?: DetailNavState;
 };
 
-function HouseCard({ house }: HouseCardProps) {
+/** Card for a single Hogwarts house, shown in the grid on the houses index page. */
+function HouseCard({ house, navState }: HouseCardProps) {
 	const color = getHouseColor(house.name);
 
 	return (
-		<Link to={`/houses/${house.id}`} data-card className="HouseCard" viewTransition>
+		<Link to={`/houses/${house.id}`} state={navState} data-card className="HouseCard" viewTransition>
 			<header>
 				<Shield className="big" style={{ color }} />
 				<hgroup>

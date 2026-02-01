@@ -1,3 +1,4 @@
+/** Shield icon used for Hogwarts houses. */
 export default function Shield(props: React.PropsWithoutRef<React.SVGProps<SVGSVGElement>>) {
 	return (
 		<svg

@@ -1,14 +1,16 @@
 import React from "react";
 import CardSkeleton from "../../lib/components/CardSkeleton";
+import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import WizardCard from "../../lib/components/WizardCard";
 import { Hat } from "../../lib/components/icons";
 import { useWizards } from "../../lib/hooks/use-wizards";
 
 const SKELETON_COUNT = 6;
 
+/** Index page that lists all wizards with a text search input. */
 function WizardsIndex() {
 	const [search, setSearch] = React.useState("");
-	const { wizards, isLoading, error, refetchAsync } = useWizards({
+	const { wizards, navState, isLoading, error, refetchAsync } = useWizards({
 		textSearch: search,
 	});
 
@@ -32,10 +34,7 @@ function WizardsIndex() {
 					<input type="text" placeholder="Search wizards..." onInput={(e) => setSearch(e.currentTarget.value)} />
 				</search>
 				{error && (
-					<div data-error>
-						<p>Failed to load wizards.</p>
-						<button onClick={refetchAsync}>Retry</button>
-					</div>
+					<ErrorDisplay entity="wizards" status={error.status} statusText={error.statusText} onRetry={refetchAsync} />
 				)}
 				{isLoading && (
 					<ul data-grid>
@@ -53,7 +52,7 @@ function WizardsIndex() {
 					<ul data-grid>
 						{wizards.map((wizard) => (
 							<data key={wizard.id} value={wizard.id}>
-								<WizardCard wizard={wizard} />
+								<WizardCard wizard={wizard} navState={navState} />
 							</data>
 						))}
 					</ul>

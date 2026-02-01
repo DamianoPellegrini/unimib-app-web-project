@@ -1,11 +1,14 @@
 import { Link } from "react-router";
+import type { DetailNavState } from "../models/detail-nav";
 import type { MagicalCreature } from "../models/magical-creature";
 import { Monster, Paw } from "./icons";
 
 type MagicalCreatureCardProps = {
 	creature: MagicalCreature;
+	navState?: DetailNavState;
 };
 
+/** Palette of pastel oklch colours assigned to creature cards based on their id. */
 const COLORS = [
 	"oklch(0.8 0.08 89.03)", // yellow
 	"oklch(0.8 0.08 0)", // red
@@ -16,15 +19,20 @@ const COLORS = [
 	"oklch(0.8 0.08 212.23)", // teal
 ];
 
-function MagicalCreatureCard({ creature }: MagicalCreatureCardProps) {
+/** Card for a single creature, shown in the grid on the magical creatures index page. */
+function MagicalCreatureCard({ creature, navState }: MagicalCreatureCardProps) {
 	return (
-		<Link to={`/magical-creatures/${creature.id}`} data-card className="MagicalCreatureCard" viewTransition>
+		<Link
+			to={`/magical-creatures/${creature.id}`}
+			state={navState}
+			data-card
+			className="MagicalCreatureCard"
+			viewTransition
+		>
 			<header>
 				<Paw className="big" style={{ color: COLORS[(creature.id.charCodeAt(0) * 10) % COLORS.length] }} />
 				<hgroup>
-					<h3 style={{ viewTransitionName: `creature-${creature.id}` }}>
-						{creature.name ?? "Unknown creature"}
-					</h3>
+					<h3 style={{ viewTransitionName: `creature-${creature.id}` }}>{creature.name ?? "Unknown creature"}</h3>
 				</hgroup>
 			</header>
 			<main>{creature.description || "No description available"}</main>

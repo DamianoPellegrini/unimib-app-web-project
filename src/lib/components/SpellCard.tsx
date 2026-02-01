@@ -1,15 +1,18 @@
 import { Link } from "react-router";
+import type { DetailNavState } from "../models/detail-nav";
 import type { Spell } from "../models/spell";
 import { getSpellColor } from "../colors";
 import { Wand } from "./icons";
 
 type SpellCardProps = {
 	spell: Spell;
+	navState?: DetailNavState;
 };
 
-function SpellCard({ spell }: SpellCardProps) {
+/** Card for a single spell, shown in the grid on the spells index page. */
+function SpellCard({ spell, navState }: SpellCardProps) {
 	return (
-		<Link to={`/spells/${spell.id}`} data-card className="SpellCard" viewTransition>
+		<Link to={`/spells/${spell.id}`} state={navState} data-card className="SpellCard" viewTransition>
 			<header>
 				<Wand className="big" style={{ color: getSpellColor(spell.light) }} />
 				<hgroup>

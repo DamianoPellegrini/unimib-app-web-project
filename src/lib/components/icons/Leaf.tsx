@@ -1,3 +1,4 @@
+/** Leaf icon used for ingredients. */
 export default function Leaf(props: React.PropsWithoutRef<React.SVGProps<SVGSVGElement>>) {
 	return (
 		<svg

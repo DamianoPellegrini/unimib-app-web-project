@@ -1,3 +1,4 @@
+/** Monster face icon used for difficulty and dangerousness indicators. */
 export default function Monster(props: React.PropsWithoutRef<React.SVGProps<SVGSVGElement>>) {
 	return (
 		<svg

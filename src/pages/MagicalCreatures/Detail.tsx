@@ -1,8 +1,11 @@
 import { useParams } from "react-router";
+import DetailNav from "../../lib/components/DetailNav";
 import DetailSkeleton from "../../lib/components/DetailSkeleton";
+import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import { Monster, Paw } from "../../lib/components/icons";
 import { useMagicalCreature } from "../../lib/hooks/use-magical-creatures";
 
+/** Detail page for a single magical creature, showing classification, status, and description. */
 function MagicalCreatureDetail() {
 	const { id } = useParams();
 	const { creature, isLoading, error, refetchAsync } = useMagicalCreature(id!);
@@ -10,10 +13,7 @@ function MagicalCreatureDetail() {
 	if (isLoading) return <DetailSkeleton rows={4} />;
 	if (error)
 		return (
-			<div data-error>
-				<p>Failed to load creature.</p>
-				<button onClick={refetchAsync}>Retry</button>
-			</div>
+			<ErrorDisplay entity="creature" status={error.status} statusText={error.statusText} onRetry={refetchAsync} />
 		);
 	if (!creature) return <p>Creature not found.</p>;
 
@@ -54,6 +54,8 @@ function MagicalCreatureDetail() {
 					<p>{creature.description}</p>
 				</section>
 			)}
+
+			<DetailNav />
 		</article>
 	);
 }

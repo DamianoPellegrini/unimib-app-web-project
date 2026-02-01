@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { Hat, Leaf, Paw, Potion, Shield, Wand } from "../lib/components/icons";
 
+/** Navigation cards shown on the home page, one per entity type. */
 const SECTIONS = [
 	{
 		to: "/elixirs",
@@ -40,6 +41,7 @@ const SECTIONS = [
 	},
 ] as const;
 
+/** Home page with an introduction and links to each entity section. */
 function App() {
 	return (
 		<div className="HomePage">

@@ -1,3 +1,4 @@
+/** All spell type values returned by the API. */
 export const SPELL_TYPES = [
 	"None",
 	"Charm",
@@ -19,6 +20,7 @@ export const SPELL_TYPES = [
 	"Vanishment",
 ] as const;
 
+/** All spell light colour values returned by the API. */
 export const SPELL_LIGHTS = [
 	"None",
 	"Blue",
@@ -50,6 +52,7 @@ export const SPELL_LIGHTS = [
 export type SpellType = (typeof SPELL_TYPES)[number];
 export type SpellLight = (typeof SPELL_LIGHTS)[number];
 
+/** A spell returned by the /Spells endpoint. */
 export interface Spell {
 	id: string;
 	name?: string;

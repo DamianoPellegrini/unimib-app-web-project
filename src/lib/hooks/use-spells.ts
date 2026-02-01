@@ -1,20 +1,26 @@
 import React from "react";
 import { API_BASE_URL } from "../constants";
+import type { DetailNavState } from "../models/detail-nav";
 import type { Spell, SpellType } from "../models/spell";
 import { useFetch } from "./use-fetch";
 
+/** Filter options for the spell list. */
 type UseSpellsOptions = {
 	textSearch?: string;
 	type?: SpellType;
 };
 
+/**
+ * Fetches all spells and applies client-side filtering.
+ * Also builds a {@link DetailNavState} from the unfiltered list for prev/next navigation.
+ */
 export function useSpells(filters?: UseSpellsOptions) {
 	const { data, ...rest } = useFetch<Spell[]>(`${API_BASE_URL}/Spells`, {
 		headers: { "Cache-Control": "max-age=31536000, immutable" },
 	});
 	const { textSearch, type } = filters ?? {};
 
-	// Filtering lato client per evitare di dove fare debouncing ed evitare eventuali rate limit con API
+	// Client-side filtering to avoid debouncing and potential API rate limits
 	const filteredSpells = React.useMemo(
 		() =>
 			type || textSearch
@@ -31,9 +37,18 @@ export function useSpells(filters?: UseSpellsOptions) {
 		[textSearch, type, data],
 	);
 
-	return { spells: filteredSpells, ...rest };
+	const navState = React.useMemo<DetailNavState | undefined>(
+		() =>
+			data
+				? { basePath: "/spells", items: data.map((s) => ({ id: s.id, name: s.name ?? "Unknown spell" })) }
+				: undefined,
+		[data],
+	);
+
+	return { spells: filteredSpells, navState, ...rest };
 }
 
+/** Fetches a single spell by its id. */
 export function useSpell(id: string) {
 	const { data, ...rest } = useFetch<Spell>(`${API_BASE_URL}/Spells/${id}`);
 	return { spell: data, ...rest };

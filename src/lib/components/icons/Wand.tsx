@@ -1,3 +1,4 @@
+/** Sparkle/wand icon used for spells. */
 export default function Wand(props: React.PropsWithoutRef<React.SVGProps<SVGSVGElement>>) {
 	return (
 		<svg

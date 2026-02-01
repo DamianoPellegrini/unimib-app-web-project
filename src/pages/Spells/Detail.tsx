@@ -1,21 +1,19 @@
 import { useParams } from "react-router";
+import DetailNav from "../../lib/components/DetailNav";
 import DetailSkeleton from "../../lib/components/DetailSkeleton";
+import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import { getSpellColor } from "../../lib/colors";
 import { Wand } from "../../lib/components/icons";
 import { useSpell } from "../../lib/hooks/use-spells";
 
+/** Detail page for a single spell, showing type, light, effect, and creator. */
 function SpellDetail() {
 	const { id } = useParams();
 	const { spell, isLoading, error, refetchAsync } = useSpell(id!);
 
 	if (isLoading) return <DetailSkeleton rows={4} />;
 	if (error)
-		return (
-			<div data-error>
-				<p>Failed to load spell.</p>
-				<button onClick={refetchAsync}>Retry</button>
-			</div>
-		);
+		return <ErrorDisplay entity="spell" status={error.status} statusText={error.statusText} onRetry={refetchAsync} />;
 	if (!spell) return <p>Spell not found.</p>;
 
 	return (
@@ -55,6 +53,8 @@ function SpellDetail() {
 					)}
 				</dl>
 			</section>
+
+			<DetailNav />
 		</article>
 	);
 }

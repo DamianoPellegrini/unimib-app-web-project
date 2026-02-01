@@ -6,6 +6,7 @@ const HOUSE_COLORS: Record<string, string> = {
 	Slytherin: "oklch(0.8 0.08 158.87)",
 };
 
+/** Returns the oklch accent colour for a given house name, or undefined if unknown. */
 export function getHouseColor(name?: string) {
 	if (name && name in HOUSE_COLORS) return HOUSE_COLORS[name];
 	return undefined;
@@ -37,6 +38,7 @@ const SPELL_LIGHT_COLORS: Record<string, string> = {
 	BlackSmoke: "oklch(0.5 0.02 260)",
 };
 
+/** Returns the oklch accent colour for a given spell light value, or undefined if unknown. */
 export function getSpellColor(light?: string) {
 	if (light && light in SPELL_LIGHT_COLORS) return SPELL_LIGHT_COLORS[light];
 	return undefined;

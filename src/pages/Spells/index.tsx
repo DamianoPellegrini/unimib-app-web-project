@@ -1,14 +1,16 @@
 import React from "react";
 import CardSkeleton from "../../lib/components/CardSkeleton";
+import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import SpellCard from "../../lib/components/SpellCard";
 import { Wand } from "../../lib/components/icons";
 import { useSpells } from "../../lib/hooks/use-spells";
 
 const SKELETON_COUNT = 6;
 
+/** Index page that lists all spells with a text search input. */
 function SpellsIndex() {
 	const [search, setSearch] = React.useState("");
-	const { spells, isLoading, error, refetchAsync } = useSpells({
+	const { spells, navState, isLoading, error, refetchAsync } = useSpells({
 		textSearch: search,
 	});
 
@@ -32,10 +34,7 @@ function SpellsIndex() {
 					<input type="text" placeholder="Search spells..." onInput={(e) => setSearch(e.currentTarget.value)} />
 				</search>
 				{error && (
-					<div data-error>
-						<p>Failed to load spells.</p>
-						<button onClick={refetchAsync}>Retry</button>
-					</div>
+					<ErrorDisplay entity="spells" status={error.status} statusText={error.statusText} onRetry={refetchAsync} />
 				)}
 				{isLoading && (
 					<ul data-grid>
@@ -53,7 +52,7 @@ function SpellsIndex() {
 					<ul data-grid>
 						{spells.map((spell) => (
 							<data key={spell.id} value={spell.id}>
-								<SpellCard spell={spell} />
+								<SpellCard spell={spell} navState={navState} />
 							</data>
 						))}
 					</ul>

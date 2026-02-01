@@ -1,20 +1,26 @@
 import React from "react";
 import { API_BASE_URL } from "../constants";
+import type { DetailNavState } from "../models/detail-nav";
 import type { CreatureClassification, MagicalCreature } from "../models/magical-creature";
 import { useFetch } from "./use-fetch";
 
+/** Filter options for the magical creature list. */
 type UseMagicalCreaturesOptions = {
 	textSearch?: string;
 	classification?: CreatureClassification;
 };
 
+/**
+ * Fetches all magical creatures and applies client-side filtering.
+ * Also builds a {@link DetailNavState} from the unfiltered list for prev/next navigation.
+ */
 export function useMagicalCreatures(filters?: UseMagicalCreaturesOptions) {
 	const { data, ...rest } = useFetch<MagicalCreature[]>(`${API_BASE_URL}/MagicalCreature`, {
 		headers: { "Cache-Control": "max-age=31536000, immutable" },
 	});
 	const { textSearch, classification } = filters ?? {};
 
-	// Filtering lato client per evitare di dove fare debouncing ed evitare eventuali rate limit con API
+	// Client-side filtering to avoid debouncing and potential API rate limits
 	const filteredCreatures = React.useMemo(
 		() =>
 			classification || textSearch
@@ -30,9 +36,21 @@ export function useMagicalCreatures(filters?: UseMagicalCreaturesOptions) {
 		[textSearch, classification, data],
 	);
 
-	return { creatures: filteredCreatures, ...rest };
+	const navState = React.useMemo<DetailNavState | undefined>(
+		() =>
+			data
+				? {
+						basePath: "/magical-creatures",
+						items: data.map((c) => ({ id: c.id, name: c.name ?? "Unknown creature" })),
+					}
+				: undefined,
+		[data],
+	);
+
+	return { creatures: filteredCreatures, navState, ...rest };
 }
 
+/** Fetches a single magical creature by its id. */
 export function useMagicalCreature(id: string) {
 	const { data, ...rest } = useFetch<MagicalCreature>(`${API_BASE_URL}/MagicalCreatures/${id}`);
 	return { creature: data, ...rest };

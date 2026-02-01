@@ -1,23 +1,27 @@
 import { Link, useParams } from "react-router";
+import DetailNav from "../../lib/components/DetailNav";
 import DetailSkeleton from "../../lib/components/DetailSkeleton";
+import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import { Hat } from "../../lib/components/icons";
 import { useWizard } from "../../lib/hooks/use-wizards";
+import type { DetailNavState } from "../../lib/models/detail-nav";
 
+/** Detail page for a single wizard, showing their known elixirs. */
 function WizardDetail() {
 	const { id } = useParams();
 	const { wizard, isLoading, error, refetchAsync } = useWizard(id!);
 
 	if (isLoading) return <DetailSkeleton rows={2} />;
 	if (error)
-		return (
-			<div data-error>
-				<p>Failed to load wizard.</p>
-				<button onClick={refetchAsync}>Retry</button>
-			</div>
-		);
+		return <ErrorDisplay entity="wizard" status={error.status} statusText={error.statusText} onRetry={refetchAsync} />;
 	if (!wizard) return <p>Wizard not found.</p>;
 
 	const displayName = [wizard.firstName, wizard.lastName].filter(Boolean).join(" ") || "Unknown wizard";
+
+	const elixirNav: DetailNavState | undefined =
+		wizard.elixirs.length > 0
+			? { basePath: "/elixirs", items: wizard.elixirs.map((e) => ({ id: e.id, name: e.name ?? "Unknown elixir" })) }
+			: undefined;
 
 	return (
 		<article className="DetailPage">
@@ -34,7 +38,7 @@ function WizardDetail() {
 					<ul>
 						{wizard.elixirs.map((elixir) => (
 							<li key={elixir.id}>
-								<Link to={`/elixirs/${elixir.id}`} viewTransition>
+								<Link to={`/elixirs/${elixir.id}`} state={elixirNav} viewTransition>
 									{elixir.name}
 								</Link>
 							</li>
@@ -42,6 +46,8 @@ function WizardDetail() {
 					</ul>
 				</section>
 			)}
+
+			<DetailNav />
 		</article>
 	);
 }

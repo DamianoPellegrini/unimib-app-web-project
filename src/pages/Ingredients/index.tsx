@@ -1,14 +1,16 @@
 import React from "react";
 import CardSkeleton from "../../lib/components/CardSkeleton";
+import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import IngredientCard from "../../lib/components/IngredientCard";
 import { Leaf } from "../../lib/components/icons";
 import { useIngredients } from "../../lib/hooks/use-ingredients";
 
 const SKELETON_COUNT = 6;
 
+/** Index page that lists all ingredients with a text search input. */
 function IngredientsIndex() {
 	const [search, setSearch] = React.useState("");
-	const { ingredients, isLoading, error, refetchAsync } = useIngredients({
+	const { ingredients, navState, isLoading, error, refetchAsync } = useIngredients({
 		textSearch: search,
 	});
 
@@ -32,10 +34,12 @@ function IngredientsIndex() {
 					<input type="text" placeholder="Search ingredients..." onInput={(e) => setSearch(e.currentTarget.value)} />
 				</search>
 				{error && (
-					<div data-error>
-						<p>Failed to load ingredients.</p>
-						<button onClick={refetchAsync}>Retry</button>
-					</div>
+					<ErrorDisplay
+						entity="ingredients"
+						status={error.status}
+						statusText={error.statusText}
+						onRetry={refetchAsync}
+					/>
 				)}
 				{isLoading && (
 					<ul data-grid>
@@ -53,7 +57,7 @@ function IngredientsIndex() {
 					<ul data-grid>
 						{ingredients.map((ingredient) => (
 							<data key={ingredient.id} value={ingredient.id}>
-								<IngredientCard ingredient={ingredient} />
+								<IngredientCard ingredient={ingredient} navState={navState} />
 							</data>
 						))}
 					</ul>

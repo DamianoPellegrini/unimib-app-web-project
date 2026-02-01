@@ -1,21 +1,39 @@
 import { Link, useParams } from "react-router";
+import DetailNav from "../../lib/components/DetailNav";
 import DetailSkeleton from "../../lib/components/DetailSkeleton";
+import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import { Hourglass, Monster, Potion } from "../../lib/components/icons";
 import { useElixir } from "../../lib/hooks/use-elixirs";
+import type { DetailNavState } from "../../lib/models/detail-nav";
 
+/** Detail page for a single elixir, showing properties, ingredients, and inventors. */
 function ElixirDetail() {
 	const { id } = useParams();
 	const { elixir, isLoading, error, refetchAsync } = useElixir(id!);
 
 	if (isLoading) return <DetailSkeleton rows={4} />;
 	if (error)
-		return (
-			<div data-error>
-				<p>Failed to load elixir.</p>
-				<button onClick={refetchAsync}>Retry</button>
-			</div>
-		);
+		return <ErrorDisplay entity="elixir" status={error.status} statusText={error.statusText} onRetry={refetchAsync} />;
 	if (!elixir) return <p>Elixir not found.</p>;
+
+	const ingredientNav: DetailNavState | undefined =
+		elixir.ingredients && elixir.ingredients.length > 0
+			? {
+					basePath: "/ingredients",
+					items: elixir.ingredients.map((i) => ({ id: i.id, name: i.name ?? "Unknown ingredient" })),
+				}
+			: undefined;
+
+	const inventorNav: DetailNavState | undefined =
+		elixir.inventors && elixir.inventors.length > 0
+			? {
+					basePath: "/wizards",
+					items: elixir.inventors.map((i) => ({
+						id: i.id,
+						name: [i.firstName, i.lastName].filter(Boolean).join(" ") || "Unknown wizard",
+					})),
+				}
+			: undefined;
 
 	return (
 		<article className="DetailPage">
@@ -65,7 +83,7 @@ function ElixirDetail() {
 					<ul>
 						{elixir.ingredients.map((ingredient) => (
 							<li key={ingredient.id}>
-								<Link to={`/ingredients/${ingredient.id}`} viewTransition>
+								<Link to={`/ingredients/${ingredient.id}`} state={ingredientNav} viewTransition>
 									{ingredient.name}
 								</Link>
 							</li>
@@ -80,7 +98,7 @@ function ElixirDetail() {
 					<ul>
 						{elixir.inventors.map((inventor) => (
 							<li key={inventor.id}>
-								<Link to={`/wizards/${inventor.id}`} viewTransition>
+								<Link to={`/wizards/${inventor.id}`} state={inventorNav} viewTransition>
 									{[inventor.firstName, inventor.lastName].filter(Boolean).join(" ")}
 								</Link>
 							</li>
@@ -88,6 +106,8 @@ function ElixirDetail() {
 					</ul>
 				</section>
 			)}
+
+			<DetailNav />
 		</article>
 	);
 }

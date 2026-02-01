@@ -1,5 +1,6 @@
 import type { Wizard, WizardTrait } from "./wizard";
 
+/** A Hogwarts house returned by the /Houses endpoint. */
 export interface House {
 	id: string;
 	name?: string;

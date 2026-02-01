@@ -1,11 +1,14 @@
 import { Link } from "react-router";
+import type { DetailNavState } from "../models/detail-nav";
 import type { Elixir } from "../models/elixir";
 import { Hourglass, Monster, Potion } from "./icons";
 
 type ElixirCardProps = {
 	elixir: Elixir;
+	navState?: DetailNavState;
 };
 
+/** Palette of pastel oklch colours assigned to elixir cards based on their id. */
 const COLORS = [
 	"oklch(0.8 0.08 0)",
 	"oklch(0.8 0.08 289.56)",
@@ -16,12 +19,13 @@ const COLORS = [
 	"oklch(0.8 0.08 322.84)", // pink
 ];
 
-function ElixirCard({ elixir }: ElixirCardProps) {
+/** Card for a single elixir, shown in the grid on the elixirs index page. */
+function ElixirCard({ elixir, navState }: ElixirCardProps) {
 	// if (!elixir.time) {
 	// 	return null;
 	// }
 	return (
-		<Link to={`/elixirs/${elixir.id}`} data-card className="ElixirCard" viewTransition>
+		<Link to={`/elixirs/${elixir.id}`} state={navState} data-card className="ElixirCard" viewTransition>
 			<header>
 				<Potion className="big" style={{ color: COLORS[(elixir.id.charCodeAt(0) * 10) % COLORS.length] }} />
 				<hgroup>
