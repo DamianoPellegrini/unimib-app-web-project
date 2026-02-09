@@ -1,10 +1,12 @@
 import React from "react";
 import { sleep } from "../utils";
 
+// NOTE: this could live in utils but is central to the app, so it's not just a util anymore
+
 /** Artificial delay (ms) applied in dev mode to make loading states visible. */
 const DEV_DELAY_MS = import.meta.env.DEV ? 1000 : 0;
 
-/** Shape of the error object stored in state when a request fails. */
+/** Standardized error shape */
 type HTTPError = {
 	status: number;
 	statusText: string;
@@ -146,7 +148,8 @@ export function useFetch<T>(input: string | URL, options?: UseFetchOptions) {
 					try {
 						body = (await response.json()) as Record<string, unknown>;
 					} catch {
-						/* non-JSON error body — ignore */
+						// dev assertion
+						console.error("assert: Body is not valid JSON. Other formts are currently unsupported.");
 					}
 
 					const httpError: HTTPError = {

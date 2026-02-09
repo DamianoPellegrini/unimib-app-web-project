@@ -18,13 +18,17 @@ The project was scaffolded with `bun create vite@8.2.0`, selecting the React + T
 
 ## Build tooling
 
-- **Vite 8** handles bundling, dev server, and HMR.
+- **Vite 7** handles bundling, dev server, and HMR.
 - **SWC** (via `@vitejs/plugin-react-swc`) compiles TypeScript and JSX instead of Babel, for faster builds.
 - **TypeScript** runs as a type-checking step before the Vite build (`tsc -b && vite build`).
 - **ESLint** with flat config, including React Hooks and React Refresh plugins.
-- **Bun** is used as the package manager.
+- **Bun** is used as the package manager. npm, yarn, and pnpm also work but have no lockfile (see note below).
 
 ## Scripts
+
+All scripts can be run with `bun`, `npm`, `yarn`, or `pnpm`. The table below uses `bun`; replace with your preferred package manager.
+
+> **Note:** The repository only includes a `bun.lock` file. Using a different package manager means dependency versions are not locked and you may get different (potentially incompatible) versions. For a fully reproducible build, use Bun.
 
 | Command | Description |
 |---|---|

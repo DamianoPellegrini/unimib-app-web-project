@@ -35,6 +35,7 @@ function DetailNav({ fallback }: DetailNavProps) {
 					&larr; {prev.name}
 				</Link>
 			) : (
+				// PRESERVES SPACING
 				<span />
 			)}
 			{next ? (
@@ -42,6 +43,7 @@ function DetailNav({ fallback }: DetailNavProps) {
 					{next.name} &rarr;
 				</Link>
 			) : (
+				// PRESERVES SPACING
 				<span />
 			)}
 		</nav>

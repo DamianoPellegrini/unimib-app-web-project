@@ -1,5 +1,6 @@
 import React from "react";
 import { Outlet, NavLink } from "react-router";
+import { SECTIONS } from "../lib/constants";
 
 /** Root layout rendered around every route. Contains the navbar, main outlet, and footer. */
 function AppLayout() {
@@ -37,36 +38,13 @@ function AppLayout() {
 								Introduction
 							</NavLink>
 						</li>
-						<li>
-							<NavLink to="/elixirs" onClick={() => setMenuOpen(false)} viewTransition>
-								Elixirs
-							</NavLink>
-						</li>
-						<li>
-							<NavLink to="/houses" onClick={() => setMenuOpen(false)} viewTransition>
-								Houses
-							</NavLink>
-						</li>
-						<li>
-							<NavLink to="/ingredients" onClick={() => setMenuOpen(false)} viewTransition>
-								Ingredients
-							</NavLink>
-						</li>
-						<li>
-							<NavLink to="/magical-creatures" onClick={() => setMenuOpen(false)} viewTransition>
-								Magical Creatures
-							</NavLink>
-						</li>
-						<li>
-							<NavLink to="/spells" onClick={() => setMenuOpen(false)} viewTransition>
-								Spells
-							</NavLink>
-						</li>
-						<li>
-							<NavLink to="/wizards" onClick={() => setMenuOpen(false)} viewTransition>
-								Wizards
-							</NavLink>
-						</li>
+						{SECTIONS.map(({ to, label }) => (
+							<li key={to}>
+								<NavLink to={to} onClick={() => setMenuOpen(false)} viewTransition>
+									{label}
+								</NavLink>
+							</li>
+						))}
 					</menu>
 				</nav>
 			</header>

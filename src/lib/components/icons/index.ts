@@ -8,5 +8,6 @@ import Wand from "./Wand";
 import Hat from "./Hat";
 import Leaf from "./Leaf";
 import Paw from "./Paw";
+import Warning from "./Warning";
 
-export { Monster, Hourglass, Potion, Shield, Wand, Hat, Leaf, Paw };
+export { Monster, Hourglass, Potion, Shield, Wand, Hat, Leaf, Paw, Warning };

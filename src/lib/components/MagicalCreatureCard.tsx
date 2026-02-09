@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { getCardColor } from "../colors";
 import type { DetailNavState } from "../models/detail-nav";
 import type { MagicalCreature } from "../models/magical-creature";
 import { Monster, Paw } from "./icons";
@@ -7,17 +8,6 @@ type MagicalCreatureCardProps = {
 	creature: MagicalCreature;
 	navState?: DetailNavState;
 };
-
-/** Palette of pastel oklch colours assigned to creature cards based on their id. */
-const COLORS = [
-	"oklch(0.8 0.08 89.03)", // yellow
-	"oklch(0.8 0.08 0)", // red
-	"oklch(0.8 0.08 158.87)", // green
-	"oklch(0.8 0.08 247.55)", // blue
-	"oklch(0.8 0.08 289.56)", // purple
-	"oklch(0.8 0.08 322.84)", // pink
-	"oklch(0.8 0.08 212.23)", // teal
-];
 
 /** Card for a single creature, shown in the grid on the magical creatures index page. */
 function MagicalCreatureCard({ creature, navState }: MagicalCreatureCardProps) {
@@ -30,7 +20,7 @@ function MagicalCreatureCard({ creature, navState }: MagicalCreatureCardProps) {
 			viewTransition
 		>
 			<header>
-				<Paw className="big" style={{ color: COLORS[(creature.id.charCodeAt(0) * 10) % COLORS.length] }} />
+				<Paw className="big" style={{ color: getCardColor(creature.id) }} />
 				<hgroup>
 					<h3 style={{ viewTransitionName: `creature-${creature.id}` }}>{creature.name ?? "Unknown creature"}</h3>
 				</hgroup>

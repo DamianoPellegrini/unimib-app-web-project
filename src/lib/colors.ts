@@ -1,3 +1,19 @@
+/** Shared pastel oklch palette used by entity cards. */
+const CARD_COLORS = [
+	"oklch(0.8 0.08 0)",
+	"oklch(0.8 0.08 89.03)",
+	"oklch(0.8 0.08 158.87)",
+	"oklch(0.8 0.08 212.23)",
+	"oklch(0.8 0.08 247.55)",
+	"oklch(0.8 0.08 289.56)",
+	"oklch(0.8 0.08 322.84)",
+];
+
+/** Returns an oklch accent colour for a given entity id, cycling through the shared palette. */
+export function getCardColor(id: string) {
+	return CARD_COLORS[(id.charCodeAt(0) * 10) % CARD_COLORS.length];
+}
+
 /** Pastel oklch colors mapped by Hogwarts house name. */
 const HOUSE_COLORS: Record<string, string> = {
 	Gryffindor: "oklch(0.8 0.08 0)",

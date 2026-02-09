@@ -28,16 +28,18 @@ A Harry Potter themed single-page application that lets you browse spells, house
 
 ### Prerequisites
 
-- [Bun](https://bun.sh/) v1.0 or later
+- [Bun](https://bun.sh/) v1.0 or later (recommended), **or** [Node.js](https://nodejs.org/) with npm, yarn, or pnpm
+
+> **Note:** The repository only includes a `bun.lock` file. Using a different package manager means dependency versions are not locked and you may get different (potentially incompatible) versions. For a fully reproducible build, use Bun.
 
 ### Development
 
 ```sh
 # Install dependencies
-bun install
+bun install    # or: npm install / yarn install / pnpm install
 
 # Start the dev server with hot module replacement
-bun run dev
+bun run dev    # or: npm run dev / yarn dev / pnpm dev
 ```
 
 The app will be available at `http://localhost:5173/unimib-app-web-project/`.
@@ -46,10 +48,10 @@ The app will be available at `http://localhost:5173/unimib-app-web-project/`.
 
 ```sh
 # Type-check and build
-bun run build
+bun run build    # or: npm run build / yarn build / pnpm build
 
 # Preview the production build locally
-bun run preview
+bun run preview  # or: npm run preview / yarn preview / pnpm preview
 ```
 
 The output goes to the `dist/` directory.
@@ -57,7 +59,7 @@ The output goes to the `dist/` directory.
 ### Linting
 
 ```sh
-bun run lint
+bun run lint     # or: npm run lint / yarn lint / pnpm lint
 ```
 
 Uses ESLint with flat config, including React Hooks and React Refresh plugins.
