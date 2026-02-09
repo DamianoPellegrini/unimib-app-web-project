@@ -290,6 +290,53 @@ nav {
 	}
 }
 
+/* ── View toggle ──────────────────────────────────────────── */
+
+.ViewToggle {
+	display: flex;
+	gap: 2px;
+	border-radius: var(--radius);
+	overflow: hidden;
+	border: 1px solid var(--color-wood-600);
+	flex-shrink: 0;
+
+	button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: var(--space-sm) var(--space-md);
+		border: none;
+		border-radius: 0;
+		background: var(--color-wood-800);
+		color: var(--muted-text);
+		cursor: pointer;
+		transition:
+			background 160ms ease,
+			color 160ms ease;
+
+		&:hover {
+			background: var(--color-wood-600);
+		}
+
+		&[aria-pressed="true"] {
+			background: var(--color-wood-600);
+			color: var(--text);
+		}
+	}
+}
+
+.search-bar {
+	display: flex;
+	gap: var(--space-sm);
+	align-items: stretch;
+	margin-block: var(--space-md);
+}
+
+.search-bar search {
+	flex: 1;
+	margin-block: 0;
+}
+
 /* ── Grid ─────────────────────────────────────────────────── */
 
 ul[data-grid] {
@@ -298,6 +345,55 @@ ul[data-grid] {
 	list-style: none;
 	grid-template-columns: repeat(3, minmax(250px, 1fr));
 	gap: var(--space-lg);
+}
+
+/* ── List ─────────────────────────────────────────────────── */
+
+ul[data-list] {
+	display: flex;
+	flex-direction: column;
+	padding: 0;
+	list-style: none;
+	gap: var(--space-sm);
+}
+
+ul[data-list] a[data-card] {
+	border-radius: var(--radius);
+	padding: var(--space-md) var(--space-lg);
+}
+
+ul[data-list] .ElixirCard,
+ul[data-list] .HouseCard,
+ul[data-list] .SpellCard,
+ul[data-list] .WizardCard,
+ul[data-list] .IngredientCard,
+ul[data-list] .MagicalCreatureCard {
+	flex-direction: row;
+	align-items: center;
+	gap: var(--space-lg);
+
+	header {
+		flex: 1;
+		padding-bottom: 0;
+		border-bottom: none;
+	}
+
+	header:has(+ main) {
+		padding-bottom: 0;
+		border-bottom: none;
+	}
+
+	main {
+		flex: 2;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	footer.icon-group {
+		flex-grow: 0;
+		flex-shrink: 0;
+	}
 }
 
 /* ── Cards ────────────────────────────────────────────────── */
@@ -765,8 +861,39 @@ a[data-card] {
 		flex-direction: column;
 	}
 
-	ul[data-grid] {
+	ul[data-grid],
+	ul[data-list] {
+		display: grid;
 		grid-template-columns: 1fr;
+		padding: 0;
+		list-style: none;
+		gap: var(--space-lg);
+	}
+
+	.ViewToggle {
+		display: none;
+	}
+
+	ul[data-list] .ElixirCard,
+	ul[data-list] .HouseCard,
+	ul[data-list] .SpellCard,
+	ul[data-list] .WizardCard,
+	ul[data-list] .IngredientCard,
+	ul[data-list] .MagicalCreatureCard {
+		flex-direction: column;
+		align-items: stretch;
+		gap: var(--space-sm);
+
+		main {
+			overflow: visible;
+			text-overflow: unset;
+			white-space: normal;
+		}
+	}
+
+	ul[data-list] a[data-card] {
+		border-radius: var(--radius-lg);
+		padding: var(--space-lg);
 	}
 
 	.DetailPage dl {

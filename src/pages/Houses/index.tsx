@@ -2,6 +2,7 @@ import React from "react";
 import CardSkeleton from "../../lib/components/CardSkeleton";
 import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import HouseCard from "../../lib/components/HouseCard";
+import ViewToggle, { type ViewMode } from "../../lib/components/ViewToggle";
 import { Shield } from "../../lib/components/icons";
 import { useHouses } from "../../lib/hooks/use-houses";
 
@@ -10,6 +11,7 @@ const SKELETON_COUNT = 4;
 /** Index page that lists all Hogwarts houses with a text search input. */
 function HousesIndex() {
 	const [search, setSearch] = React.useState("");
+	const [view, setView] = React.useState<ViewMode>("grid");
 	const { houses, navState, isLoading, error, refetchAsync } = useHouses({
 		textSearch: search,
 	});
@@ -30,14 +32,17 @@ function HousesIndex() {
 			</p>
 			<section>
 				<h2>Available information</h2>
-				<search>
-					<input type="text" placeholder="Search houses..." onInput={(e) => setSearch(e.currentTarget.value)} />
-				</search>
+				<div className="search-bar">
+					<search>
+						<input type="text" placeholder="Search houses..." onInput={(e) => setSearch(e.currentTarget.value)} />
+					</search>
+					<ViewToggle view={view} onViewChange={setView} />
+				</div>
 				{error && (
 					<ErrorDisplay entity="houses" status={error.status} statusText={error.statusText} onRetry={refetchAsync} />
 				)}
 				{isLoading && (
-					<ul data-grid>
+					<ul {...{ [`data-${view}`]: true }}>
 						{Array.from({ length: SKELETON_COUNT }, (_, i) => (
 							<CardSkeleton key={i} subtitle body footer />
 						))}
@@ -49,7 +54,7 @@ function HousesIndex() {
 					</div>
 				)}
 				{houses && houses.length > 0 && (
-					<ul data-grid>
+					<ul {...{ [`data-${view}`]: true }}>
 						{houses.map((house) => (
 							<data key={house.id} value={house.id}>
 								<HouseCard house={house} navState={navState} />

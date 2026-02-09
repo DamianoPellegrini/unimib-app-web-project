@@ -2,6 +2,7 @@ import React from "react";
 import CardSkeleton from "../../lib/components/CardSkeleton";
 import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import SpellCard from "../../lib/components/SpellCard";
+import ViewToggle, { type ViewMode } from "../../lib/components/ViewToggle";
 import { Wand } from "../../lib/components/icons";
 import { useSpells } from "../../lib/hooks/use-spells";
 
@@ -10,6 +11,7 @@ const SKELETON_COUNT = 6;
 /** Index page that lists all spells with a text search input. */
 function SpellsIndex() {
 	const [search, setSearch] = React.useState("");
+	const [view, setView] = React.useState<ViewMode>("grid");
 	const { spells, navState, isLoading, error, refetchAsync } = useSpells({
 		textSearch: search,
 	});
@@ -30,14 +32,17 @@ function SpellsIndex() {
 			</p>
 			<section>
 				<h2>Available information</h2>
-				<search>
-					<input type="text" placeholder="Search spells..." onInput={(e) => setSearch(e.currentTarget.value)} />
-				</search>
+				<div className="search-bar">
+					<search>
+						<input type="text" placeholder="Search spells..." onInput={(e) => setSearch(e.currentTarget.value)} />
+					</search>
+					<ViewToggle view={view} onViewChange={setView} />
+				</div>
 				{error && (
 					<ErrorDisplay entity="spells" status={error.status} statusText={error.statusText} onRetry={refetchAsync} />
 				)}
 				{isLoading && (
-					<ul data-grid>
+					<ul {...{ [`data-${view}`]: true }}>
 						{Array.from({ length: SKELETON_COUNT }, (_, i) => (
 							<CardSkeleton key={i} subtitle body footer />
 						))}
@@ -49,7 +54,7 @@ function SpellsIndex() {
 					</div>
 				)}
 				{spells && spells.length > 0 && (
-					<ul data-grid>
+					<ul {...{ [`data-${view}`]: true }}>
 						{spells.map((spell) => (
 							<data key={spell.id} value={spell.id}>
 								<SpellCard spell={spell} navState={navState} />

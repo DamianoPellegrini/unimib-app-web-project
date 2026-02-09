@@ -9,5 +9,7 @@ import Hat from "./Hat";
 import Leaf from "./Leaf";
 import Paw from "./Paw";
 import Warning from "./Warning";
+import Grid from "./Grid";
+import List from "./List";
 
-export { Monster, Hourglass, Potion, Shield, Wand, Hat, Leaf, Paw, Warning };
+export { Monster, Hourglass, Potion, Shield, Wand, Hat, Leaf, Paw, Warning, Grid, List };

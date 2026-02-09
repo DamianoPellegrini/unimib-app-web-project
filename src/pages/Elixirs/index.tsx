@@ -2,6 +2,7 @@ import React from "react";
 import CardSkeleton from "../../lib/components/CardSkeleton";
 import ElixirCard from "../../lib/components/ElixirCard";
 import ErrorDisplay from "../../lib/components/ErrorDisplay";
+import ViewToggle, { type ViewMode } from "../../lib/components/ViewToggle";
 import { Potion } from "../../lib/components/icons";
 import { useElixirs } from "../../lib/hooks/use-elixirs";
 
@@ -10,6 +11,7 @@ const SKELETON_COUNT = 6;
 /** Index page that lists all elixirs with a text search input. */
 function ElixirsIndex() {
 	const [search, setSearch] = React.useState("");
+	const [view, setView] = React.useState<ViewMode>("grid");
 	const { elixirs, navState, isLoading, error, refetchAsync } = useElixirs({
 		textSearch: search,
 	});
@@ -31,14 +33,17 @@ function ElixirsIndex() {
 			<section>
 				<h2>Available information</h2>
 
-				<search>
-					<input type="text" placeholder="Search elixirs..." onInput={(e) => setSearch(e.currentTarget.value)} />
-				</search>
+				<div className="search-bar">
+					<search>
+						<input type="text" placeholder="Search elixirs..." onInput={(e) => setSearch(e.currentTarget.value)} />
+					</search>
+					<ViewToggle view={view} onViewChange={setView} />
+				</div>
 				{error && (
 					<ErrorDisplay entity="elixirs" status={error.status} statusText={error.statusText} onRetry={refetchAsync} />
 				)}
 				{isLoading && (
-					<ul data-grid>
+					<ul {...{ [`data-${view}`]: true }}>
 						{Array.from({ length: SKELETON_COUNT }, (_, i) => (
 							<CardSkeleton key={i} subtitle body footer />
 						))}
@@ -50,7 +55,7 @@ function ElixirsIndex() {
 					</div>
 				)}
 				{elixirs && elixirs.length > 0 && (
-					<ul data-grid>
+					<ul {...{ [`data-${view}`]: true }}>
 						{elixirs.map((elixir) => (
 							<data key={elixir.id} value={elixir.id}>
 								<ElixirCard elixir={elixir} navState={navState} />

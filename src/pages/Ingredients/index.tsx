@@ -2,6 +2,7 @@ import React from "react";
 import CardSkeleton from "../../lib/components/CardSkeleton";
 import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import IngredientCard from "../../lib/components/IngredientCard";
+import ViewToggle, { type ViewMode } from "../../lib/components/ViewToggle";
 import { Leaf } from "../../lib/components/icons";
 import { useIngredients } from "../../lib/hooks/use-ingredients";
 
@@ -10,6 +11,7 @@ const SKELETON_COUNT = 6;
 /** Index page that lists all ingredients with a text search input. */
 function IngredientsIndex() {
 	const [search, setSearch] = React.useState("");
+	const [view, setView] = React.useState<ViewMode>("grid");
 	const { ingredients, navState, isLoading, error, refetchAsync } = useIngredients({
 		textSearch: search,
 	});
@@ -30,9 +32,12 @@ function IngredientsIndex() {
 			</p>
 			<section>
 				<h2>Available information</h2>
-				<search>
-					<input type="text" placeholder="Search ingredients..." onInput={(e) => setSearch(e.currentTarget.value)} />
-				</search>
+				<div className="search-bar">
+					<search>
+						<input type="text" placeholder="Search ingredients..." onInput={(e) => setSearch(e.currentTarget.value)} />
+					</search>
+					<ViewToggle view={view} onViewChange={setView} />
+				</div>
 				{error && (
 					<ErrorDisplay
 						entity="ingredients"
@@ -42,7 +47,7 @@ function IngredientsIndex() {
 					/>
 				)}
 				{isLoading && (
-					<ul data-grid>
+					<ul {...{ [`data-${view}`]: true }}>
 						{Array.from({ length: SKELETON_COUNT }, (_, i) => (
 							<CardSkeleton key={i} />
 						))}
@@ -54,7 +59,7 @@ function IngredientsIndex() {
 					</div>
 				)}
 				{ingredients && ingredients.length > 0 && (
-					<ul data-grid>
+					<ul {...{ [`data-${view}`]: true }}>
 						{ingredients.map((ingredient) => (
 							<data key={ingredient.id} value={ingredient.id}>
 								<IngredientCard ingredient={ingredient} navState={navState} />

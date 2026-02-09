@@ -2,6 +2,7 @@ import React from "react";
 import CardSkeleton from "../../lib/components/CardSkeleton";
 import ErrorDisplay from "../../lib/components/ErrorDisplay";
 import MagicalCreatureCard from "../../lib/components/MagicalCreatureCard";
+import ViewToggle, { type ViewMode } from "../../lib/components/ViewToggle";
 import { Paw } from "../../lib/components/icons";
 import { useMagicalCreatures } from "../../lib/hooks/use-magical-creatures";
 
@@ -10,6 +11,7 @@ const SKELETON_COUNT = 6;
 /** Index page that lists all magical creatures with a text search input. */
 function MagicalCreaturesIndex() {
 	const [search, setSearch] = React.useState("");
+	const [view, setView] = React.useState<ViewMode>("grid");
 	const { creatures, navState, isLoading, error, refetchAsync } = useMagicalCreatures({
 		textSearch: search,
 	});
@@ -30,14 +32,17 @@ function MagicalCreaturesIndex() {
 			</p>
 			<section>
 				<h2>Available information</h2>
-				<search>
-					<input type="text" placeholder="Search creatures..." onInput={(e) => setSearch(e.currentTarget.value)} />
-				</search>
+				<div className="search-bar">
+					<search>
+						<input type="text" placeholder="Search creatures..." onInput={(e) => setSearch(e.currentTarget.value)} />
+					</search>
+					<ViewToggle view={view} onViewChange={setView} />
+				</div>
 				{error && (
 					<ErrorDisplay entity="creatures" status={error.status} statusText={error.statusText} onRetry={refetchAsync} />
 				)}
 				{isLoading && (
-					<ul data-grid>
+					<ul {...{ [`data-${view}`]: true }}>
 						{Array.from({ length: SKELETON_COUNT }, (_, i) => (
 							<CardSkeleton key={i} body footer />
 						))}
@@ -49,7 +54,7 @@ function MagicalCreaturesIndex() {
 					</div>
 				)}
 				{creatures && creatures.length > 0 && (
-					<ul data-grid>
+					<ul {...{ [`data-${view}`]: true }}>
 						{creatures.map((creature) => (
 							<data key={creature.id} value={creature.id}>
 								<MagicalCreatureCard creature={creature} navState={navState} />
