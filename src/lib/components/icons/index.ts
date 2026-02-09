@@ -11,5 +11,7 @@ import Paw from "./Paw";
 import Warning from "./Warning";
 import Grid from "./Grid";
 import List from "./List";
+import Menu from "./Menu";
+import Close from "./Close";
 
-export { Monster, Hourglass, Potion, Shield, Wand, Hat, Leaf, Paw, Warning, Grid, List };
+export { Monster, Hourglass, Potion, Shield, Wand, Hat, Leaf, Paw, Warning, Grid, List, Menu, Close };
